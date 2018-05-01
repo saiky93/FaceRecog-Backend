@@ -1,0 +1,31 @@
+<app-navbar1></app-navbar1>
+<div class="container" style="height:432px">
+  <div class="row">
+    <div class="col-xs-12 col-sm-10 col-md-8 col-sm-offset-1 col-md-offset-2">
+       <h3>Welcome to Face Recognition Portol</h3>
+      <div class="form-group">
+        <label for="">Email</label>
+        <input type="email" class="form-control" name="email" [(ngModel)]="checkemail.email" 
+          required #email="ngModel" pattern="^[a-zA-Z0-9_.+-]+@[a-zA-Z]+.[a-zA-Z]+$"><br>
+          <div>
+              <small [hidden]="email.valid || email.pristine" class="text-danger">
+                <small [hidden]="!email.hasError('pattern')">The Email pattern is not acceptable.</small>
+              </small>
+          </div><br>
+      <small [hidden]="email.valid" class="{{bootclass}}">
+          The email field cannot be empty. Please enter your email in the following format <i>john@doe.com</i>.
+        </small>
+        {{emptymessage}}
+      </div>
+      <br>
+      <button class="btn btn-primary" (click)="onSubmit(checkemail.email)">Submit</button>
+      <div [hidden]="show">
+        <div class={{cls}}>
+      {{message}}
+      </div>
+     </div>
+     <button [hidden]="shoo" class="btn btn-primary" routerLink="/csignup">Click here to Register</button>
+     <button [hidden]="shoo1" class = "btn btn-primary" routerLink="/login">Click here to login</button>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,123 @@
+<app-navbar4></app-navbar4>
+<div class="container">
+  <h1>Update user information </h1>
+  <form #f="ngForm" novalidate (ngSubmit)="onSubmit(f)">
+    
+    <!--Input Password -->
+    <div class="form-group">
+      <label for="">Password</label>
+      <input type="password" class="form-control" name="password" [(ngModel)]="employee.user.password"
+        required validateEqual="confirmPassword" reverse="true" #password="ngModel">
+        <div>
+          <small *ngIf="employee.user.email.toLowerCase()==employee.user.password.toLowerCase()" class="text-danger">
+            Password should not be same as Email.</small>
+              <small [hidden]="password.valid || password.pristine" class="text-danger">
+                <small [hidden]="!password.hasError('required')">Password is required.</small>
+              </small>
+              </div>
+    </div>
+
+    <!--Retype Password -->
+    <div class="form-group">
+      <label for="">Retype password</label>
+      <input type="password" class="form-control" name="confirmPassword" [(ngModel)]="employee.user.confirmPassword" 
+        required validateEqual="password" reverse="false" #confirmPassword="ngModel">
+      <small [hidden]="confirmPassword.valid || (confirmPassword.pristine && !f.submitted)" class="text-danger">
+        Password mismatch
+      </small>
+    </div>
+    <!--Security Question 1 -->
+            <div class="form-group">
+              <label for="">Security Question 1</label>
+              <select class="form-control" name="securityQuestion1" [(ngModel)]="employee.user.securityQuestion1" 
+                required #securityQuestion1="ngModel" (change)="onChange1($event.target.value)">
+                 <option value="null">{{employee.user.securityQuestion1}}</option>
+                 <option *ngFor="let question of securityQuestions1">
+                  {{question.question}}
+                 </option>  
+              </select>
+         
+              <small [hidden]="securityQuestion1.valid || (securityQuestion1.pristine && !f.submitted)" class="text-danger">
+                Security Question is required
+                </small>
+            </div>
+      
+            <!--Security Answer1 -->
+            <div class="form-group">
+              <label for="">Security Answer1</label>
+              <input type="text" class="form-control" name="securityAnswer1" [(ngModel)]="employee.user.securityAnswer1" 
+              required #securityAnswer1="ngModel">
+              
+              <small [hidden]="securityAnswer1.valid || (securityAnswer1.pristine && !f.submitted)" class="text-danger">
+                Security Answer is required
+              </small>
+            </div>
+      
+
+    <!--Security Question 2 -->
+    <div class="form-group">
+      <label for="">Security Question 2</label>
+      <select class="form-control" name="securityQuestion2" [(ngModel)]="employee.user.securityQuestion2" 
+        required #securityQuestion2="ngModel" (change)="onChange2($event.target.value)">
+         <option value="">{{employee.user.securityQuestion2}}</option>
+         <option *ngFor="let question of securityQuestions2">
+          {{question.question}}
+         </option>  
+       </select>
+ 
+      <small [hidden]="securityQuestion2.valid || (securityQuestion2.pristine && !f.submitted)" class="text-danger">
+        Security Question is required
+        </small>
+    </div>
+
+    <!--Security Answer2 -->
+    <div class="form-group">
+      <label for="">Security Answer2</label>
+      <input type="text" class="form-control" name="securityAnswer2" [(ngModel)]="employee.user.securityAnswer2" 
+      required #securityAnswer2="ngModel">
+      
+      <small [hidden]="securityAnswer2.valid || (securityAnswer2.pristine && !f.submitted)" class="text-danger">
+        Security Answer is required
+      </small>
+    </div>
+
+    <!--Security Question 3 -->
+    <div class="form-group">
+      <label for="">Security Question 3</label>
+      <select class="form-control" name="securityQuestion3" [(ngModel)]="employee.user.securityQuestion3" 
+        required #securityQuestion3="ngModel" (change)="onChange3($event.target.value)">
+         <option value="">{{employee.user.securityQuestion3}}</option>
+         <option *ngFor="let question of securityQuestions3">
+          {{question.question}}
+         </option>  
+      </select>
+ 
+      <small [hidden]="securityQuestion3.valid || (securityQuestion3.pristine && !f.submitted)" class="text-danger">
+        Security Question is required
+        </small>
+    </div>
+
+    <!--Security Answer3 -->
+    <div class="form-group">
+      <label for="">Security Answer3</label>
+      <input type="text" class="form-control" name="securityAnswer3" [(ngModel)]="employee.user.securityAnswer3" 
+      required #securityAnswer3="ngModel">
+      
+      <small [hidden]="securityAnswer3.valid || (securityAnswer3.pristine && !f.submitted)" class="text-danger">
+        Security Answer is required
+      </small>
+    </div>
+
+    <button type="submit" class="btn btn-default">Submit</button>
+    
+    
+    <div class="margin-20" *ngIf="f">
+        <div class="{{cls}}">{{message}}</div>
+        
+        <!-- <pre>Is form valid?: <br>{{f.valid | json}}</pre>
+        
+        <pre>Is form submitted?: <br>{{f.submitted | json}}</pre>
+        <pre>submitted value: <br>{{f.value | json}}</pre>-->
+      </div> 
+  </form>
+</div>

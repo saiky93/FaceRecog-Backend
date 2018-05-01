@@ -1,0 +1,162 @@
+<app-navbar2></app-navbar2>
+<!--Company name -->
+<div class="container">
+<h1>Update Company Information</h1>
+<form #f="ngForm" novalidate (ngSubmit)="onSubmit(f)">
+<div class="form-group">
+  <label for="">Company name</label>
+  <input type="text" class="form-control" name="name" [(ngModel)]="company.name" 
+    required #name="ngModel">
+    
+    <small [hidden]="name.valid || (name.pristine && !f.submitted)" class="text-danger">
+      Company name is required
+    </small>
+  </div>
+ <!--EIN -->
+ <div class="form-group">
+  <label for="">Employer Identification Number</label>
+  <input type="text" class="form-control" name="eIN" pattern="[0-9 -]*" minlength="6" maxlength="30" [(ngModel)]="company.eIN" 
+  required #eIN="ngModel">
+
+  <div>
+    <small [hidden]="eIN.valid || eIN.pristine" class="text-danger">
+        <small [hidden]="!eIN.hasError('minlength')">EIN should be atleast 6 digits.&nbsp;</small>
+      <small [hidden]="!eIN.hasError('pattern')">EIN will not accept alphabets.&nbsp;</small>
+      <small [hidden]="!eIN.hasError('required')">EIN is required.&nbsp;</small>
+    </small>
+  </div>
+  </div>
+
+  <!--Phone -->
+  <div class="form-group">
+  <label for="">Phone</label>
+  <input type="text" class="form-control" name="phone" minlength="10" maxlength="20" pattern="[0-9-()+ ]*"
+   [(ngModel)]="company.phone" required #phone="ngModel">
+
+   <div>
+      <small [hidden]="phone.valid || phone.pristine" class="text-danger">
+        <small [hidden]="!phone.hasError('minlength')">Mobile number should be 10digit.&nbsp;</small>
+        <small [hidden]="!phone.hasError('required')">Mobile number is required.&nbsp;</small>
+        <small [hidden]="!phone.hasError('pattern')">Mobile number will not accept Alphabets.&nbsp;</small>
+      </small>
+    </div>
+  </div>
+
+  
+ 
+    <!--Website -->
+  <div class="form-group">
+    <label for="">Website</label>
+    <input type="text" class="form-control" name="website" [(ngModel)]="company.website" 
+     #website="ngModel" pattern="^[a-zA-Z0-9_.]+.[a-zA-Z0-9_.]+.[a-zA-Z_.]+$">
+
+     <div>
+        <small [hidden]="website.valid || website.pristine" class="text-danger">
+          <small [hidden]="!website.hasError('required')">The Website filed cannot be empty.&nbsp;</small>
+          <small [hidden]="!website.hasError('pattern')">The Website pattern is required.&nbsp;</small>
+        </small>
+      </div>
+  
+    </div>
+
+<!--Address line 1 -->
+<div class="form-group">
+  <label for="">Address line 1</label>
+  <input type="text" class="form-control" name="addressLine1" [(ngModel)]="company.addressLine1" 
+    required #addressLine1="ngModel">
+    
+    <small [hidden]="addressLine1.valid || (addressLine1.pristine && !f.submitted)" class="text-danger">
+      Address line 1 is required
+    </small>
+  </div>
+
+<!--Address line 2 -->
+<div class="form-group">
+  <label for="">Address line 2 (Optional)</label>
+  <input type="text" class="form-control" name="addressLine2" [(ngModel)]="company.addressLine2" 
+     #addressLine2="ngModel">
+    
+    
+  </div>
+  
+  
+    <!--Country -->
+    <div class="form-group">
+      <label for="">Country</label>
+      <select class="form-control" name="country" [(ngModel)]="company.country" (change)="onSelectCountry($event.target.value)" 
+        required #country="ngModel">
+         <option value="">Select Country</option>
+         <option *ngFor="let country of countries">
+          {{country.name}}
+         </option>  
+      </select>
+  
+      <small [hidden]="country.valid || (country.pristine && !f.submitted)" class="text-danger">
+        Country is required
+        </small>
+    </div>
+  
+
+  <!--State -->
+  <div class="form-group">
+    <label for="">State</label>
+    <select class="form-control" name="state" [(ngModel)]="company.state"(change)="onSelectState($event.target.value)" 
+      required #state="ngModel">
+       <option value="">Select State</option>
+       <option *ngFor="let state of states">
+        {{state.name}}
+       </option>  
+      </select>
+      
+    <small [hidden]="state.valid || (state.pristine && !f.submitted)" class="text-danger">
+        State is required
+      </small>
+    </div>
+  <!--City -->
+  <div class="form-group">
+    <label for="">City</label>
+    <select class="form-control" name="city" [(ngModel)]="company.city" 
+      required #city="ngModel">
+      
+       <option value="">Select city</option>
+       <option *ngFor="let city of cities">
+        {{city.name}}
+       </option>  
+    </select>
+      
+    <small [hidden]="city.valid || (city.pristine && !f.submitted)" class="text-danger">
+        City is required
+      </small>
+    </div>
+  
+  <!--Zip Code -->
+  <div class="form-group">
+    <label for="">Zip Code</label>
+    <input type="text" class="form-control" name="zipCode" pattern="[0-9- ]*" minlength="5" maxlength="10" [(ngModel)]="company.zipCode" 
+    required #zipCode="ngModel">
+    
+    <div>
+        <small [hidden]="zipCode.valid || zipCode.pristine" class="text-danger">
+          <small [hidden]="!zipCode.hasError('minlength')">Zip Code should be between 5 to 10 characters.&nbsp;</small>
+          <small [hidden]="!zipCode.hasError('required')">Zip Code is required.&nbsp;</small>
+          <small [hidden]="!zipCode.hasError('pattern')">Zip Code will not accept Alphabets.&nbsp;</small>
+        </small>
+      </div>
+  </div>
+
+ 
+  <!--Description -->
+  <div class="form-group">
+    <label for="">Description</label>
+    <textarea class="form-control" cols="100%" rows="5" maxlength="300" name="description" [(ngModel)]="company.description" 
+    #description="ngModel"></textarea>
+    <small class="text-primary">Maximum length of description should not exceed 300 characters.</small>
+  </div>
+
+  <button type="submit" class="btn btn-primary">Update</button>
+  <div class="margin-20" *ngIf="f">
+    <div class="{{cls}}">{{message}}</div>
+    </div>
+  
+  </form>
+  </div>

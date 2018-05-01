@@ -1,0 +1,291 @@
+<app-navbar1></app-navbar1>
+<div class="container">
+  <h1>Company Registration</h1>
+  <form #f="ngForm" novalidate (ngSubmit)="onSubmit(f)">
+     <!--Input Email -->
+     <div class="form-group">
+      <label for="">Email</label>
+      <input type="email" class="form-control" name="email" [(ngModel)]="company.user.email" 
+        required  #email="ngModel" pattern="^[a-zA-Z0-9_.+-]+@[a-zA-Z]+.[a-zA-Z]+$">
+      <div>
+          <small [hidden]="email.valid || email.pristine" class="text-danger">
+            <small [hidden]="!email.hasError('pattern')">The Email pattern is not acceptable.&nbsp;</small>
+            <small [hidden]="!email.hasError('required')">The Email is required.&nbsp;</small>
+          </small>
+      </div>
+    </div>
+
+    <!--Input Password -->
+    <div class="form-group">
+      <label for="">Password</label>
+      <input type="password" class="form-control" name="password" [(ngModel)]="company.user.password"
+        required validateEqual="confirmPassword" reverse="true" #password="ngModel">
+        <div>
+        <small *ngIf="company.user.email.toLowerCase()==company.user.password.toLowerCase()" class="text-danger">
+          Password should not be same as Email.</small>
+            <small [hidden]="password.valid || password.pristine" class="text-danger">
+              <small [hidden]="!password.hasError('required')">Password is required.</small>
+            </small>
+            </div>
+    </div>
+    
+    <!--Retype Password -->
+    <div class="form-group">
+      <label for="">Retype password</label>
+      <input type="password" class="form-control" name="confirmPassword" [(ngModel)]="company.user.confirmPassword" 
+        required validateEqual="password" reverse="false" #confirmPassword="ngModel">
+      <small [hidden]="confirmPassword.valid || (confirmPassword.pristine && !f.submitted)" class="text-danger">
+        Password mismatch
+      </small>
+    </div>
+   
+  <!--Company name -->
+  <div class="form-group">
+    <label for="">Company name</label>
+    <input type="text" class="form-control" name="name" minlength="2" maxlength="40" [(ngModel)]="company.company.name" 
+      required #name="ngModel">
+      
+      <div>
+          <small [hidden]="name.valid || name.pristine" class="text-danger">
+            <small [hidden]="!name.hasError('minlength')">Company Name should be in the range of 2 to 40 characters.&nbsp;</small>
+            <small [hidden]="!name.hasError('required')">Company Name is required.&nbsp;</small>
+          </small>
+        </div>
+    </div>
+   <!--EIN -->
+   <div class="form-group">
+    <label for="">Employer Identification Number</label>
+    <input type="text" class="form-control" pattern="[0-9 -]*" minlength="6" maxlength="30" name="eIN" [(ngModel)]="company.company.eIN" 
+    required #eIN="ngModel">
+  
+    <div>
+      <small [hidden]="eIN.valid || eIN.pristine" class="text-danger">
+          <small [hidden]="!eIN.hasError('minlength')">EIN should be atleast 6 digits.&nbsp;</small>
+        <small [hidden]="!eIN.hasError('pattern')">EIN will not accept alphabets.&nbsp;</small>
+        <small [hidden]="!eIN.hasError('required')">EIN is required.&nbsp;</small>
+      </small>
+    </div>
+    </div>
+
+    <!--Phone -->
+    <div class="form-group">
+    <label for="">Phone Number</label>
+    <input type="text" class="form-control" minlength="10" maxlength="20" pattern="[0-9-()+ ]*" name="phone" [(ngModel)]="company.company.phone" 
+    required #phone="ngModel">
+      <div>
+        <small [hidden]="phone.valid || phone.pristine" class="text-danger">
+          <small [hidden]="!phone.hasError('minlength')">Mobile number should be 10digit.&nbsp;</small>
+          <small [hidden]="!phone.hasError('required')">Mobile number is required.&nbsp;</small>
+         <small [hidden]="!phone.hasError('pattern')">Mobile number will not accept Alphabets.&nbsp;</small>
+        </small>
+      </div>
+
+    </div>
+
+    
+   
+      <!--Website -->
+    <div class="form-group">
+      <label for="">Website</label>
+      <input type="text" class="form-control" name="website" [(ngModel)]="company.company.website" 
+       #website="ngModel" pattern="^[a-zA-Z0-9_.]+.[a-zA-Z0-9_.]+.[a-zA-Z_.]+$">
+       <div>
+          <small [hidden]="website.valid || website.pristine" class="text-danger">
+              <small [hidden]="!website.hasError('required')">Website is required.&nbsp;</small>
+            <small [hidden]="!website.hasError('pattern')">The Website pattern is not acceptable.</small>
+          </small>
+        </div>
+      </div>
+
+  <!--Address line 1 -->
+  <div class="form-group">
+    <label for="">Address line 1</label>
+    <input type="text" class="form-control" name="addressLine1" [(ngModel)]="company.company.addressLine1" 
+      required #addressLine1="ngModel">
+      
+      <small [hidden]="addressLine1.valid || (addressLine1.pristine && !f.submitted)" class="text-danger">
+        Address line 1 is required.
+      </small>
+    </div>
+ 
+  <!--Address line 2 -->
+  <div class="form-group">
+    <label for="">Address line 2 (Optional)</label>
+    <input type="text" class="form-control" name="addressLine2" [(ngModel)]="company.company.addressLine2" 
+       #addressLine2="ngModel">
+      
+      
+    </div>
+    
+     <!--Country -->
+     <div class="form-group">
+      <label for="">Country</label>
+      <select class="form-control" name="country" [(ngModel)]="company.company.country" (change)="onSelectCountry($event.target.value)" 
+        required #country="ngModel">
+         <option value="">Select Country</option>
+         <option *ngFor="let country of countries">
+          {{country.name}}
+         </option>  
+      </select>
+ 
+      <small [hidden]="country.valid || (country.pristine && !f.submitted)" class="text-danger">
+        Country is required.
+        </small>
+    </div>
+
+        <!--State -->
+        <div class="form-group">
+          <label for="">State</label>
+          <select class="form-control" name="state" [(ngModel)]="company.company.state" (change)="onSelectState($event.target.value)"
+            required #state="ngModel">
+             <option value="">Select State</option>
+             <option *ngFor="let state of states">
+              {{state.name}}
+             </option>  
+            </select>
+            
+          <small [hidden]="state.valid || (state.pristine && !f.submitted)" class="text-danger">
+              State is required.
+            </small>
+          </div>
+    
+    
+    <!--City -->
+  <div class="form-group">
+    <label for="">City</label>
+    <select class="form-control" name="city" [(ngModel)]="company.company.city" 
+      required #city="ngModel">
+       <option value="">Select city</option>
+       <option *ngFor="let city of cities"> 
+        {{city.name}}
+       </option>  
+    </select>
+
+      
+    <small [hidden]="city.valid || (city.pristine && !f.submitted)" class="text-danger">
+        City is required.
+      </small>
+    </div>
+ 
+     
+    <!--Zip Code -->
+    <div class="form-group">
+      <label for="">Zip Code</label>
+      <input type="text" class="form-control" pattern="[0-9- ]*" minlength="5" maxlength="10" name="zipCode" [(ngModel)]="company.company.zipCode" 
+      required #zipCode="ngModel">
+      
+      <div>
+          <small [hidden]="zipCode.valid || zipCode.pristine" class="text-danger">
+            <small [hidden]="!zipCode.hasError('minlength')">Zip Code should be atleast 5 Characters.&nbsp;</small>
+            <small [hidden]="!zipCode.hasError('required')">Zip Code is required.&nbsp;</small>
+            <small [hidden]="!zipCode.hasError('pattern')">Zip Code will only accept Numbers.&nbsp;</small>
+          </small>
+        </div>
+    </div>
+
+   
+    <!--Description -->
+    <div class="form-group">
+      <label for="">Description</label>
+      <textarea class="form-control"cols="100%" rows="5" maxlength="300" name="description" [(ngModel)]="company.company.description" 
+      #description="ngModel"></textarea>
+      <small class="text-primary">Maximum length of description should not exceed 300 characters.</small>
+    </div>
+
+    <!--Security Question 1 -->
+            <div class="form-group">
+              <label for="">Security Question 1</label>
+              <select class="form-control" name="securityQuestion1" [(ngModel)]="company.user.securityQuestion1" 
+                required #securityQuestion1="ngModel" (change)="onChange1($event.target.value)">
+                 <option value="null">{{company.user.securityQuestion1}}</option>
+                 <option *ngFor="let question of securityQuestions1">
+                  {{question.question}}
+                 </option>  
+              </select>
+         
+              <small [hidden]="securityQuestion1.valid || (securityQuestion1.pristine && !f.submitted)" class="text-danger">
+                Security Question is required
+                </small>
+            </div>
+      
+            <!--Security Answer1 -->
+            <div class="form-group">
+              <label for="">Security Answer1</label>
+              <input type="text" class="form-control" name="securityAnswer1" [(ngModel)]="company.user.securityAnswer1" 
+              required #securityAnswer1="ngModel">
+              
+              <small [hidden]="securityAnswer1.valid || (securityAnswer1.pristine && !f.submitted)" class="text-danger">
+                Security Answer is required
+              </small>
+            </div>
+      
+
+    <!--Security Question 2 -->
+    <div class="form-group">
+      <label for="">Security Question 2</label>
+      <select class="form-control" name="securityQuestion2" [(ngModel)]="company.user.securityQuestion2" 
+        required #securityQuestion2="ngModel" (change)="onChange2($event.target.value)">
+         <option value="">{{company.user.securityQuestion2}}</option>
+         <option *ngFor="let question of securityQuestions2">
+          {{question.question}}
+         </option>  
+       </select>
+ 
+      <small [hidden]="securityQuestion2.valid || (securityQuestion2.pristine && !f.submitted)" class="text-danger">
+        Security Question is required
+        </small>
+    </div>
+
+    <!--Security Answer2 -->
+    <div class="form-group">
+      <label for="">Security Answer2</label>
+      <input type="text" class="form-control" name="securityAnswer2" [(ngModel)]="company.user.securityAnswer2" 
+      required #securityAnswer2="ngModel">
+      
+      <small [hidden]="securityAnswer2.valid || (securityAnswer2.pristine && !f.submitted)" class="text-danger">
+        Security Answer is required
+      </small>
+    </div>
+
+    <!--Security Question 3 -->
+    <div class="form-group">
+      <label for="">Security Question 3</label>
+      <select class="form-control" name="securityQuestion3" [(ngModel)]="company.user.securityQuestion3" 
+        required #securityQuestion3="ngModel" (change)="onChange3($event.target.value)">
+         <option value="">{{company.user.securityQuestion3}}</option>
+         <option *ngFor="let question of securityQuestions3">
+          {{question.question}}
+         </option>  
+      </select>
+ 
+      <small [hidden]="securityQuestion3.valid || (securityQuestion3.pristine && !f.submitted)" class="text-danger">
+        Security Question is required
+        </small>
+    </div>
+
+    <!--Security Answer3 -->
+    <div class="form-group">
+      <label for="">Security Answer3</label>
+      <input type="text" class="form-control" name="securityAnswer3" [(ngModel)]="company.user.securityAnswer3" 
+      required #securityAnswer3="ngModel">
+      
+      <small [hidden]="securityAnswer3.valid || (securityAnswer3.pristine && !f.submitted)" class="text-danger">
+        Security Answer is required
+      </small>
+    </div>    
+    
+    <button type="submit" class="btn btn-default">Submit</button><br>
+    
+    <div class="margin-20" *ngIf="f">
+        <div class="{{cls}}">{{message}}</div>
+        
+        <!-- <pre>Is form valid?: <br>{{f.valid | json}}</pre>
+        
+        <pre>Is form submitted?: <br>{{f.submitted | json}}</pre>
+        <pre>submitted value: <br>{{f.value | json}}</pre>-->
+      </div> 
+
+      <button [hidden]="shoo" class = "btn btn-primary" routerLink="/login">Click here to login</button>
+      
+  </form>
+</div>

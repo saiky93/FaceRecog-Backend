@@ -1,0 +1,27 @@
+<app-navbar4></app-navbar4>
+<div class="container" style="height:432px">
+  <h1>Employee Profile </h1>
+  <div class="alert alert-warning" *ngIf="!employee.user.changedPassword" >Please change the password and add security question <a routerLink="/updateEmployeeUserInformation">here</a></div>
+  <div class="alert alert-warning" *ngIf="!employee.employee.takenPicture" >Please click to have your pictures taken for face recognition <a routerLink="/takepictures">here</a></div>
+  
+  <div><img width="200" height="200" src="{{picture}}" alt="{{employee.employee.firstName}} {{employee.lastName}} image" class="img-thumbnail">
+    <button *ngIf="saveImage"class="btn btn-primary" type="button" (click)="UploadImage()">Save Image</button> 
+    <div *ngIf="uploaded"class="alert alert-success" role="alert">
+      Uploaded successfully!
+    </div>
+    <input type="file" class="form-control" name="picture" accept="image/*" (change)="uploadImageOnPage($event)" >
+    
+  </div>
+  
+  <div>
+    <h2>{{employee.employee.firstName}} {{employee.employee.lastName}}</h2>
+    <div><b>Address:</b> {{employee.employee.addressLine1}} {{employee.employee.addressLine2}} {{employee.employee.city}} {{employee.employee.state}} {{employee.employee.country}}  {{employee.employee.zipCode}}</div>
+    
+    <div><b>Phone:</b> {{employee.employee.phone}}</div>
+    <div><b>Position:</b> {{employee.employee.position}}</div>
+  </div>
+ </div><br><br><br><br>
+
+
+
+

@@ -1,0 +1,174 @@
+<app-navbar2></app-navbar2>
+<div class="container">
+  <h1>Employee Details</h1>
+  <form #f="ngForm" novalidate (ngSubmit)="onSubmit(f)">
+    <!--First name -->
+   <div class="form-group">
+    <label for="">First Name</label>
+    <input type="text" class="form-control" name="firstName" [(ngModel)]="employee.employee.firstName" 
+    required #firstName="ngModel">
+  
+    <small [hidden]="firstName.valid || (firstName.pristine && !f.submitted)" class="text-danger">
+      First name is required
+    </small>
+    </div>
+
+   <!--Last name -->
+   <div class="form-group">
+    <label for="">Last Name</label>
+    <input type="text" class="form-control" name="lastName" [(ngModel)]="employee.employee.lastName" 
+    required #lastName="ngModel">
+  
+    <small [hidden]="lastName.valid || (lastName.pristine && !f.submitted)" class="text-danger">
+      Last name is required
+    </small>
+    </div>
+
+    <!--Social Security number -->
+    <div class="form-group">
+    <label for="">Social Security number</label>
+    <input type="text" class="form-control" name="sSN" maxlength="15" minlength="8" pattern="[0-9- ]*" 
+    [(ngModel)] ="employee.employee.sSN" 
+    required #sSN="ngModel">
+  
+    <div>
+        <small [hidden]="sSN.valid || sSN.pristine" class="text-danger">
+          <small [hidden]="!sSN.hasError('minlength')">SSN should be atleast 8 digits.&nbsp;</small>
+          <small [hidden]="!sSN.hasError('required')">SSN is required.&nbsp;</small>
+          <br><small [hidden]="!sSN.hasError('pattern')">SSN will not accept Alphabets.&nbsp;</small>
+        </small>
+      </div>
+    </div>
+ <!--Phone -->
+ <div class="form-group">
+  <label for="">Phone</label>
+  <input type="text" class="form-control" name="phone" minlength="10" maxlength="20" pattern="[0-9-()+ ]*" [(ngModel)]="employee.employee.phone" 
+  required #phone="ngModel"><br>
+
+  <div>
+        <small [hidden]="phone.valid || phone.pristine" class="text-danger">
+          <small [hidden]="!phone.hasError('minlength')">Mobile number should be atleast 10digit.&nbsp;</small>
+          <small [hidden]="!phone.hasError('required')">Mobile number is required.&nbsp;</small>
+          <br><small [hidden]="!phone.hasError('pattern')">Mobile number will not accept Alphabets.&nbsp;</small>
+        </small>
+      </div>
+  </div>
+
+    
+   
+  <!--Address line 1 -->
+  <div class="form-group">
+    <label for="">Address line 1</label>
+    <input type="text" class="form-control" name="addressLine1" [(ngModel)]="employee.employee.addressLine1" 
+      required #addressLine1="ngModel">
+      
+      <small [hidden]="addressLine1.valid || (addressLine1.pristine && !f.submitted)" class="text-danger">
+        Address line 1 is required
+      </small>
+    </div>
+ 
+  <!--Address line 2 -->
+  <div class="form-group">
+    <label for="">Address line 2 (Optional)</label>
+    <input type="text" class="form-control" name="addressLine2" [(ngModel)]="employee.employee.addressLine2" 
+       #addressLine2="ngModel">
+      
+      
+    </div>
+    
+      <!--Country -->
+      <div class="form-group">
+        <label for="">Country</label>
+        <select class="form-control" name="country" [(ngModel)]="employee.employee.country"(change)="onSelectCountry($event.target.value)" 
+          required #country="ngModel">
+           <option value="">Select Country</option>
+           <option *ngFor="let country of countries">
+            {{country.name}}
+           </option>  
+        </select>
+   
+        <small [hidden]="country.valid || (country.pristine && !f.submitted)" class="text-danger">
+          Country is required
+          </small>
+      </div>
+  
+ 
+    <!--State -->
+    <div class="form-group">
+      <label for="">State</label>
+      <select class="form-control" name="state" [(ngModel)]="employee.employee.state" (change)="onSelectState($event.target.value)"
+        required #state="ngModel">
+         <option value="">Select State</option>
+         <option *ngFor="let state of states">
+          {{state.name}}
+         </option>  
+        </select>
+        
+      <small [hidden]="state.valid || (state.pristine && !f.submitted)" class="text-danger">
+          State is required
+        </small>
+      </div>
+    <!--City -->
+    <div class="form-group">
+      <label for="">City</label>
+      <select class="form-control" name="city" [(ngModel)]="employee.employee.city" 
+        required #city="ngModel">
+        
+         <option value="">Select city</option>
+         <option *ngFor="let city of cities">
+          {{city.name}}
+         </option>  
+      </select>
+        
+      <small [hidden]="city.valid || (city.pristine && !f.submitted)" class="text-danger">
+          City is required
+        </small>
+      </div>
+     <!--Zip Code -->
+     <div class="form-group">
+      <label for="">Zip Code</label>
+      <input type="text" class="form-control" pattern="[0-9- ]*" minlength="5" maxlength="10" name="zipCode" [(ngModel)]="employee.employee.zipCode" 
+      required #zipCode="ngModel">
+      
+      <div>
+          <small [hidden]="zipCode.valid || zipCode.pristine" class="text-danger">
+            <small [hidden]="!zipCode.hasError('minlength')">Zip Code should be between 5 to 10 characters.</small>
+            <small [hidden]="!zipCode.hasError('required')">Zip Code is required.</small>
+            <small [hidden]="!zipCode.hasError('pattern')">Zip Code will not accept Alphabets.</small>
+          </small>
+        </div>
+    </div>
+<!--Position -->
+<div class="form-group">
+<label for="">Position</label>
+<input type="text" class="form-control" name="position" [(ngModel)]="employee.employee.position" 
+required #position="ngModel">
+
+<small [hidden]="position.valid || (position.pristine && !f.submitted)" class="text-danger">
+  Position is required
+</small>
+</div>
+
+ 
+<!--Picture -->
+<div class="form-group">
+    <label for="">Picture</label>
+    <img src="{{pictureWithUrl?pictureWithUrl:employee.employee.picture}}" width="100" height="100" class="rounded" alt="">
+    
+    <input type="file" class="form-control" accept="image/*" (change)="UploadImage($event)"  >
+    
+  
+  
+   
+  </div>
+   
+
+   
+    <button type="submit" class="btn btn-default">Submit</button>
+    
+    
+    <div class="margin-20" *ngIf="f">
+        <div class="{{cls}}">{{message}}</div>
+      </div> 
+  </form>
+</div>

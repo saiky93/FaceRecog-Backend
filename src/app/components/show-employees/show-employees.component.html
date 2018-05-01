@@ -1,0 +1,32 @@
+<app-navbar3></app-navbar3>
+<div class="col-lg-12" style="height:432px">
+<h1>List of Employees</h1>
+<div class="alert alert-danger" role="alert" *ngIf="employees?.length < 1">
+        There are no employees currently in the database.
+      </div>
+<table class="table table-striped" *ngIf="employees?.length > 0">
+  <thead>
+
+  <tr>
+      <th style="width: 20%">Name</th>
+      <th style="width: 20%">Email</th>
+      <th style="width: 20%">Phone</th>
+      <th style="width: 20%"></th>
+      <th style="width: 20%"></th>      
+  </tr>
+  </thead>
+  <tbody>
+  <tr *ngFor="let employee of employees">
+      <td>{{employee.employee.firstName}} {{employee.employee.lastName}}</td>
+      <td>{{employee.user.email}}</td>
+      <td>{{employee.employee.phone}}</td> 
+      <td><button class="btn btn-danger" (click)="deleteUser(employee.employee.id)">Delete</button></td>
+      <td><button class="btn btn-primary" (click)="updateUser(employee.employee.id)">Show/Update</button></td>       
+  </tr>
+  </tbody>
+</table>
+</div>
+<br><br><br>
+
+
+

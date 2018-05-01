@@ -1,0 +1,36 @@
+/* You can add global styles to this file, and also import other style files */
+body, html {
+    
+    height: auto;
+    
+    margin: 0;
+    
+    }
+    
+    .bgf{
+    
+    background:url('digitech4.jpg') center center no-repeat;
+    
+    background-size:100px 150px;
+    
+    }
+    
+    
+    
+    .auth-container{
+    
+    height: auto;
+    
+    width: auto;
+    
+    background-image: url("digitech4.jpg");
+    
+    -webkit-background-size: cover;
+    
+    -moz-background-size: cover;
+    
+    -o-background-size: cover;
+    
+    background-size: cover;
+    
+    }

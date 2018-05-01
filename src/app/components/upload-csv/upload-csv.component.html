@@ -1,0 +1,27 @@
+<app-navbar2></app-navbar2>
+<div class="col-lg-12" style="height:432px">
+<h1>Create Employee Accounts with CSV</h1>
+<p>Please uplaod the CSV file with a header in the following format:-</p>
+<div class="container">
+
+   <code><b>fname,lname,email,phone</b> <br>
+    Rajeev,Singh,rajeevs@example.com,9999999999<br>
+    Sachin,Tendulkar,sachin@example.com,9999999998<br>
+    Barak,Obama,barakobama@example.com,1111111111<br>
+    Donald,Trump,donaldtrump@example.com,2222222222<br>
+</code>
+
+</div>
+<br>
+<input type="file" 
+(change)="fileChange($event)"
+placeholder="Upload file" 
+accept=".csv">
+
+<br>
+<br>
+<button [disabled]="loading" class="btn btn-primary" (click)="upload()">Upload and Create Accounts</button>
+<img *ngIf="loading" src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA==" />
+<div class={{cls}}>{{message}}</div>
+
+</div>
