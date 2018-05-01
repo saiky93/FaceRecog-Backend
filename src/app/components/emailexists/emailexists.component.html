@@ -3,6 +3,7 @@
   <div class="row">
     <div class="col-xs-12 col-sm-10 col-md-8 col-sm-offset-1 col-md-offset-2">
        <h3>Welcome to Face Recognition Portol</h3>
+       <form #loginForm="ngForm">
       <div class="form-group">
         <label for="">Email</label>
         <input type="email" class="form-control" name="email" [(ngModel)]="checkemail.email" 
@@ -16,9 +17,8 @@
           The email field cannot be empty. Please enter your email in the following format <i>john@doe.com</i>.
         </small>
         {{emptymessage}}
-      </div>
       <br>
-      <button class="btn btn-primary" (click)="onSubmit(checkemail.email)">Submit</button>
+      <button class="btn btn-primary" type="submit"  [disabled]="loginForm.form.invalid" (click)="onSubmit(checkemail.email)">Submit</button></div></form>
       <div [hidden]="show">
         <div class={{cls}}>
       {{message}}
