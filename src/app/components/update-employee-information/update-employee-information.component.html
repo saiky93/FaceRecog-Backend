@@ -1,11 +1,11 @@
 <app-navbar4></app-navbar4>
 <div class="container">
-  <h1>Update Employee</h1>
+  <h1>Update Personal Details</h1>
   <form #f="ngForm" novalidate (ngSubmit)="onSubmit(f)">
     <!--First name -->
    <div class="form-group">
     <label for="">First Name</label>
-    <input type="text" class="form-control" name="firstName" [(ngModel)]="employee.employee.firstName" 
+    <input type="text" class="form-control" name="firstName" maxlength="50" [(ngModel)]="employee.employee.firstName" 
     required #firstName="ngModel">
   
     <small [hidden]="firstName.valid || (firstName.pristine && !f.submitted)" class="text-danger">
@@ -16,7 +16,7 @@
    <!--Last name -->
    <div class="form-group">
     <label for="">Last Name</label>
-    <input type="text" class="form-control" name="lastName" [(ngModel)]="employee.employee.lastName" 
+    <input type="text" class="form-control" name="lastName" maxlength="50" [(ngModel)]="employee.employee.lastName" 
     required #lastName="ngModel">
   
     <small [hidden]="lastName.valid || (lastName.pristine && !f.submitted)" class="text-danger">
@@ -27,7 +27,7 @@
     <!--Social Security number -->
     <div class="form-group">
     <label for="">Social Security number</label>
-    <input type="text" class="form-control" name="sSN" maxlength="20" minlength="8" pattern="[0-9 -]*" [(ngModel)]="employee.employee.sSN" 
+    <input type="text" class="form-control" name="sSN" maxlength="15" minlength="8" pattern="[0-9 -]*" [(ngModel)]="employee.employee.sSN" 
     required #sSN="ngModel">
     <div>
         <small [hidden]="sSN.valid || sSN.pristine" class="text-danger">
@@ -40,11 +40,11 @@
  <!--Phone -->
  <div class="form-group">
   <label for="">Phone</label>
-  <input type="text" class="form-control" name="phone" minlength="10" maxlength="20" pattern="[0-9-()+ ]*" [(ngModel)]="employee.employee.phone" 
+  <input type="text" class="form-control" name="phone" minlength="10" maxlength="15" pattern="[0-9-()+ ]*" [(ngModel)]="employee.employee.phone" 
   required #phone="ngModel">
   <div>
       <small [hidden]="phone.valid || phone.pristine" class="text-danger">
-        <small [hidden]="!phone.hasError('minlength')">Mobile number should be 10digit.&nbsp;</small>
+        <small [hidden]="!phone.hasError('minlength')">Mobile number should be at least 10 digit.&nbsp;</small>
         <small [hidden]="!phone.hasError('required')">Mobile number is required.&nbsp;</small>
         <small [hidden]="!phone.hasError('pattern')">Mobile number will not accept Alphabets.&nbsp;</small>
       </small>
@@ -56,7 +56,7 @@
   <!--Address line 1 -->
   <div class="form-group">
     <label for="">Address line 1</label>
-    <input type="text" class="form-control" name="addressLine1" [(ngModel)]="employee.employee.addressLine1" 
+    <input type="text" class="form-control" name="addressLine1" maxlength="50" [(ngModel)]="employee.employee.addressLine1" 
       required #addressLine1="ngModel">
       
       <small [hidden]="addressLine1.valid || (addressLine1.pristine && !f.submitted)" class="text-danger">
@@ -67,7 +67,7 @@
   <!--Address line 2 -->
   <div class="form-group">
     <label for="">Address line 2 (Optional)</label>
-    <input type="text" class="form-control" name="addressLine2" [(ngModel)]="employee.employee.addressLine2" 
+    <input type="text" class="form-control" name="addressLine2" maxlength="50" [(ngModel)]="employee.employee.addressLine2" 
        #addressLine2="ngModel">
       
       
@@ -128,7 +128,7 @@
     <!--Zip Code -->
     <div class="form-group">
       <label for="">Zip Code</label>
-      <input type="text" class="form-control" name="zipCode" pattern="[0-9- ]*" minlength="5" maxlength="15" [(ngModel)]="employee.employee.zipCode" 
+      <input type="text" class="form-control" name="zipCode" pattern="[0-9- ]*" minlength="5" maxlength="10" [(ngModel)]="employee.employee.zipCode" 
       required #zipCode="ngModel">
       <div>
           <small [hidden]="zipCode.valid || zipCode.pristine" class="text-danger">
@@ -141,7 +141,7 @@
 <!--Position -->
 <div class="form-group">
 <label for="">Position</label>
-<input type="text" class="form-control" name="position" [(ngModel)]="employee.employee.position" 
+<input type="text" class="form-control" name="position" maxlength="20" [(ngModel)]="employee.employee.position" 
 required #position="ngModel">
 
 <small [hidden]="position.valid || (position.pristine && !f.submitted)" class="text-danger">

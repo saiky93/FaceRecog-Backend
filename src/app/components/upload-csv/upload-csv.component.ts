@@ -9,7 +9,7 @@ import {Company} from '../../model/Company';
   styleUrls: ['./upload-csv.component.css']
 })
 export class UploadCsvComponent implements OnInit {
-  apiEndPoint = "http://192.168.1.130:8080/upload/csv";
+  apiEndPoint = "http://localhost:8080/upload/csv";
   message="";
   loading=false;
   company: Company;

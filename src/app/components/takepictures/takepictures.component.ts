@@ -17,6 +17,7 @@ export class TakepicturesComponent implements OnInit {
   loading;
   pictureTakenCheck;
   show=true;
+  cls;
   constructor(private trainingService: TrainingService,private employeeService: EmployeeService,private _router:Router, private _http: Http) { }
 
   ngOnInit() {
@@ -44,6 +45,7 @@ export class TakepicturesComponent implements OnInit {
       {
         this.message = "Pictures taken successfully";
         this.show=false;
+        this.cls="text-success";
         this.employeeService.setTakenImage(this.empId).subscribe((emp)=>{
           console.log(emp);
 
@@ -57,6 +59,7 @@ export class TakepicturesComponent implements OnInit {
   }
   else
   {
+    this.cls="text-danger";
     this.message="Pictures already taken."
   }
     
