@@ -42,12 +42,12 @@
  <!--Phone -->
  <div class="form-group">
   <label for="">Phone</label>
-  <input type="text" class="form-control" name="phone" minlength="10" maxlength="20" pattern="[0-9-()+ ]*" [(ngModel)]="employee.employee.phone" 
+  <input type="text" class="form-control" name="phone" minlength="10" maxlength="15" pattern="[0-9-()+ ]*" [(ngModel)]="employee.employee.phone" 
   required #phone="ngModel"><br>
 
   <div>
         <small [hidden]="phone.valid || phone.pristine" class="text-danger">
-          <small [hidden]="!phone.hasError('minlength')">Mobile number should be atleast 10digit.&nbsp;</small>
+          <small [hidden]="!phone.hasError('minlength')">Mobile number should be at least 10 digit.&nbsp;</small>
           <small [hidden]="!phone.hasError('required')">Mobile number is required.&nbsp;</small>
           <br><small [hidden]="!phone.hasError('pattern')">Mobile number will not accept Alphabets.&nbsp;</small>
         </small>

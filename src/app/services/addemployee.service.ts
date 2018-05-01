@@ -11,29 +11,29 @@ export class AddEmployeeService{
     
     
     getLoggedCompany(){
-        return this.http.get('http://192.168.1.130:8080/user/logged/',this.jwt());
+        return this.http.get('http://localhost:8080/user/logged/',this.jwt());
     }
     getAllCountries(){
-        return this.http.get('http://192.168.1.130:8080/address/country/');
+        return this.http.get('http://localhost:8080/address/country/');
     }
 
     
     getAllStates(){
-        return this.http.get('http://192.168.1.130:8080/address/state/');
+        return this.http.get('http://localhost:8080/address/state/');
     }
 
     
     getAllCities(){
-        return this.http.get('http://192.168.1.130:8080/address/city/');
+        return this.http.get('http://localhost:8080/address/city/');
     }
 
     getAllSecurityQuestions(){
-        return this.http.get('http://192.168.1.130:8080/address/questions/');
+        return this.http.get('http://localhost:8080/address/questions/');
     }
 
     addEmployee(company){
 
-        return this.http.post('http://192.168.1.130:8080/user/employee', company,this.jwt());
+        return this.http.post('http://localhost:8080/user/employee', company,this.jwt());
      }
  
      jwt() {

@@ -25,7 +25,7 @@ export class AddEmployeeComponent implements OnInit {
   cities: {};
   securityQuestions: {};
   cls:any;
-  private apiBaseUrl = 'http://192.168.1.130:8080'; 
+  private apiBaseUrl = 'http://localhost:8080'; 
   headers: Headers = new Headers();
   
   constructor(private addEmployeeService: AddEmployeeService,private _router:Router, private _http: Http) {

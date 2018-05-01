@@ -22,6 +22,7 @@ body, html {
     height: auto;
     
     width: auto;
+    min-height: 639px;
     
     background-image: url("digitech4.jpg");
     

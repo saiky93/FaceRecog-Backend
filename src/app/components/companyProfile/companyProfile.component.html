@@ -1,16 +1,19 @@
 <app-navbar2></app-navbar2>
 <div class="container" style="height:432px">
   <h1>Company Profile</h1>
-  <div>
-    <h2>{{company.name}}</h2>
-    <table>
-    <tr><td><b>Address:</b></td> <td>{{company.addressLine1}}, {{company.state}}, {{company.city}}, {{company.zipCode}}</td></tr>
-    <br><tr><td><b>Phone:</b></td> <td>{{company.phone}}</td></tr>
-    <br><tr><td><b>Website:</b></td> <td>{{company.website}}</td></tr>
-    <br><tr><td><b>EIN:</b></td> <td>{{company.eIN}}</td></tr>
-    <br><tr><td><b>Description:</b></td> <td>{{company.description}}</td></tr>
-    </table>
-  </div>
+<br>
+  <address>
+    <strong>{{company.name}}.</strong><br>
+    {{company.addressLine1}} {{company.addressLine2}}<br>
+    {{company.city}}, {{company.state}} {{company.zipCode}}<br>
+    <abbr title="Phone">Phone:</abbr> {{company.phone}}
+  </address>
+  
+  <blockquote>
+    <p>{{company.description}}.</p>
+  </blockquote>
+
+
 </div>
 
 

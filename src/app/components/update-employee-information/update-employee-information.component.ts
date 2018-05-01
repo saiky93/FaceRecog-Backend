@@ -109,7 +109,8 @@ export class UpdateEmployeeInformationComponent implements OnInit {
       (response) => {
         console.log(response)
 //        this.states = response.json().result;
-        this.states = response.json().result.filter((state)=>state.country == this.employee.employee.country);
+this.states = response.json().result;        
+//this.states = response.json().result.filter((state)=>state.country == this.employee.employee.country);
         
       },
       (error) => console.log(error)

@@ -1,0 +1,65 @@
+    
+video, canvas {
+    margin-left: 9%;
+    position: absolute;
+}
+        
+        
+        
+        
+        #homediv {
+        
+        min-height: 698px;
+        
+        }
+        
+        body, html {
+        
+        height: auto;
+        
+        margin: 0;
+        
+        }
+        
+        .bgf{
+        
+        background:url('digitech3.jpg') center center no-repeat;
+        
+        background-size:100px 150px;
+        
+        }
+        
+        
+        
+        
+        .auth-container{
+        
+        height: auto;
+        
+        width: auto;
+        
+        background-image: url("digitech3.jpg");
+        
+        -webkit-background-size: cover;
+        
+        -moz-background-size: cover;
+        
+        -o-background-size: cover;
+        
+        background-size: cover;
+        
+        }
+.canvasContainer {
+    float: left;
+}
+
+.profilePicture {
+    float: right;
+}
+
+.hidden {
+    display: none;
+}
+        
+        
+    

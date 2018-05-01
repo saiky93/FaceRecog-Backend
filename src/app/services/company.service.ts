@@ -10,26 +10,26 @@ export class CompanyService{
     }
 
     getAllCountries(){
-        return this.http.get('http://192.168.1.130:8080/address/country/');
+        return this.http.get('http://localhost:8080/address/country/');
     }
 
     
     getAllStates(){
-        return this.http.get('http://192.168.1.130:8080/address/state/');
+        return this.http.get('http://localhost:8080/address/state/');
     }
 
     getAllSecurityQuestions(){
-        return this.http.get('http://192.168.1.130:8080/address/questions/');
+        return this.http.get('http://localhost:8080/address/questions/');
     }
 
     getAllCities(){
-        return this.http.get('http://192.168.1.130:8080/address/city/');
+        return this.http.get('http://localhost:8080/address/city/');
     }
 
     
     registerCompany(company){
 
-        return this.http.post('http://192.168.1.130:8080/user/user', company);
+        return this.http.post('http://localhost:8080/user/user', company);
      }
  
 

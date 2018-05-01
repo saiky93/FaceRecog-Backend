@@ -10,7 +10,7 @@ export class IsEmailExistsService{
     }
 
     isEmailExists(email){
-       return this.http.post('http://192.168.1.130:8080/user/email', email);
+       return this.http.post('http://localhost:8080/user/email', email);
     }
 
 }

@@ -36,13 +36,13 @@
     <!--Social Security number -->
     <div class="form-group">
       <label for="">Social Security number</label>
-      <input type="text" class="form-control" name="sSN" maxlength="20" minlength="8" pattern="[0-9 -]*" 
+      <input type="text" class="form-control" name="sSN" maxlength="15" minlength="8" pattern="[0-9 -]*" 
       [(ngModel)] ="company.employee.sSN" 
       required #sSN="ngModel">
     
       <div>
           <small [hidden]="sSN.valid || sSN.pristine" class="text-danger">
-            <small [hidden]="!sSN.hasError('minlength')">SSN should be atleast 8 digits.&nbsp;</small>
+            <small [hidden]="!sSN.hasError('minlength')">SSN should be at least 8 digits.&nbsp;</small>
             <small [hidden]="!sSN.hasError('required')">SSN is required.&nbsp;</small>
             <small [hidden]="!sSN.hasError('pattern')">SSN will not accept Alphabets.&nbsp;</small>
           </small>
@@ -52,7 +52,7 @@
       <!--Phone -->
       <div class="form-group">
       <label for="">Phone</label>
-      <input type="text" class="form-control" name="phone" pattern="[0-9 ()-]*" minlength="10" maxlength="20" [(ngModel)]="company.employee.phone" 
+      <input type="text" class="form-control" name="phone" pattern="[0-9 ()-]*" minlength="10" maxlength="15" [(ngModel)]="company.employee.phone" 
       required #phone="ngModel">
     
       <div>

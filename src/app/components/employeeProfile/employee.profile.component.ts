@@ -13,7 +13,7 @@ import {DomSanitizer} from '@angular/platform-browser';
   styleUrls: ['./employee.profile.component.css']
 })
 export class EmployeeProfileComponent implements OnInit {
-  private apiBaseUrl = 'http://192.168.1.130:8080'; 
+  private apiBaseUrl = 'http://localhost:8080'; 
   headers: Headers = new Headers();
   employee: Company;
   message: string;
@@ -72,7 +72,7 @@ export class EmployeeProfileComponent implements OnInit {
       }
     }
     this.url=this.apiBaseUrl+"/images/";
-    //this.picture = "http://192.168.1.130:8080/images/"+this.employee.employee.picture;
+    //this.picture = "http://localhost:8080/images/"+this.employee.employee.picture;
 //console.log(localStorage.getItem('currentUser'));
    
     this.employeeService.getLoggedEmployee().subscribe(

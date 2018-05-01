@@ -56,7 +56,8 @@ const appRoutes: Routes = [
   {path:'updateEmployeeInformation', component:UpdateEmployeeInformationComponent, canActivate: [AuthGuardEmployee]},
   {path:'updateEmployeeUserInformation', component:UpdateEmployeeUserInformationComponent, canActivate: [AuthGuardEmployee]},
   {path:'updateEmployeeFromCompany/:id', component:CompanyUpdateEmplpoyeeComponent,canActivate: [AuthGuardCompany]}, 
-  {path:'takepictures', component: TakepicturesComponent,canActivate: [AuthGuardEmployee]} 
+  {path:'takepictures', component: TakepicturesComponent,canActivate: [AuthGuardEmployee]}, 
+  
 ]
 //components will go in declarations, services will go in providers, imported angular libraries will go in imports
 @NgModule({
@@ -81,6 +82,8 @@ const appRoutes: Routes = [
     Navbar2Component,
     Navbar3Component,
     Navbar4Component,
+  
+   
   ],
   imports: [
     BrowserModule,

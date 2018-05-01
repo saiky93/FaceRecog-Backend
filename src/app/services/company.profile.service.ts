@@ -10,34 +10,34 @@ export class CompanyProfileService{
     }
 
     getAllCountries(){
-        return this.http.get('http://192.168.1.130:8080/address/country/');
+        return this.http.get('http://localhost:8080/address/country/');
     }
 
     getCompanyUser(){
 
-        return this.http.get('http://192.168.1.130:8080/user/logged',this.jwt());
+        return this.http.get('http://localhost:8080/user/logged',this.jwt());
         
     }
     
     getAllStates(){
-        return this.http.get('http://192.168.1.130:8080/address/state/');
+        return this.http.get('http://localhost:8080/address/state/');
     }
 
     
     getAllCities(){
-        return this.http.get('http://192.168.1.130:8080/address/city/');
+        return this.http.get('http://localhost:8080/address/city/');
     }
 
     getAllSecurityQuestions(){
-        return this.http.get('http://192.168.1.130:8080/user/securityQuestion/');
+        return this.http.get('http://localhost:8080/user/securityQuestion/');
     }
 
     updateCompany(company){
 
-        return this.http.put('http://192.168.1.130:8080/user/company/', company,this.jwt());
+        return this.http.put('http://localhost:8080/user/company/', company,this.jwt());
      }
      showEmployees(){
-        return this.http.get('http://192.168.1.130:8080/user/company/employee/',this.jwt()).map(
+        return this.http.get('http://localhost:8080/user/company/employee/',this.jwt()).map(
             (response: Response) => {
                 const data = response.json().result;
                 return data;
@@ -46,7 +46,7 @@ export class CompanyProfileService{
     
     getCompany(id){
     
-        return this.http.get('http://192.168.1.130:8080/company/'+id,this.jwt()).map((response: Response) => {
+        return this.http.get('http://localhost:8080/company/'+id,this.jwt()).map((response: Response) => {
             const data = response.json().result;
             return data;
         });
@@ -54,7 +54,7 @@ export class CompanyProfileService{
     }
     // getCompanyById()
     // {
-    //     return this.http.get('http://192.168.1.130:8080/user/logged',this.jwt()).map((response: Response) => {
+    //     return this.http.get('http://localhost:8080/user/logged',this.jwt()).map((response: Response) => {
     //         const data = response.json().result;
     //         return data;
     //     });
@@ -63,7 +63,7 @@ export class CompanyProfileService{
 
     createaccount(compid,filename)
     {
-        return this.http.get('http://192.168.1.130:8080/upload/csv/createaccount/'+compid+'/'+filename,this.jwt()).map((response: Response) => {
+        return this.http.get('http://localhost:8080/upload/csv/createaccount/'+compid+'/'+filename,this.jwt()).map((response: Response) => {
             const data = response.json();
             return data;
         });
@@ -72,7 +72,7 @@ export class CompanyProfileService{
    
     getLoggedCompany()
     {
-        return this.http.get('http://192.168.1.130:8080/user/loggedCompany',this.jwt()).map((response: Response) => {
+        return this.http.get('http://localhost:8080/user/loggedCompany',this.jwt()).map((response: Response) => {
             const data = response.json().result;
             console.log(data);
             return data;
@@ -84,7 +84,7 @@ export class CompanyProfileService{
     
     {
     
-    return this.http.get('http://192.168.1.130:8080/company/'+compId).map((response: Response) => {
+    return this.http.get('http://localhost:8080/company/'+compId).map((response: Response) => {
     
     const data = response.json().result;
     
@@ -97,19 +97,19 @@ export class CompanyProfileService{
 
     deleteUser(id)
     {
-        return this.http.delete('http://192.168.1.130:8080/user/employee/'+id,this.jwt()).map((response: Response)=>response.json());
+        return this.http.delete('http://localhost:8080/user/employee/'+id,this.jwt()).map((response: Response)=>response.json());
 
     }
 
     updateUser(id,employee)
     {
-        return this.http.put('http://192.168.1.130:8080/user/employee/'+id,employee,this.jwt()).map((response: Response)=>response.json());
+        return this.http.put('http://localhost:8080/user/employee/'+id,employee,this.jwt()).map((response: Response)=>response.json());
     
     }
 
     getEmployeeByPassedId(id)
     {
-        return this.http.get('http://192.168.1.130:8080/employee/'+id,this.jwt()).map((response: Response) => response.json().result);
+        return this.http.get('http://localhost:8080/employee/'+id,this.jwt()).map((response: Response) => response.json().result);
     }
 
    

@@ -1,712 +1,109 @@
 <!doctype html>
 
-
-
 <html>
-
-
-
-<head>
-
-
-
-<meta charset="utf-8">
-
-
-
-<title>Face Recognition</title>
-
-<!-- Latest compiled and minified CSS -->
-
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
-
-
-
-<!-- Optional theme -->
-
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
-
-
-
-<!-- Latest compiled and minified JavaScript -->
-
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
-
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
-
-
-
-
-
-<script src="./tracking-min.js"></script>
-
-
-
-<script src="./face-min.js"></script>
-
-
-
-<script src="./artyom.window.min.js"></script>
-
-
-
-<script>
-
-// Create a global accesible instance of artyom
-
-window.artyom = new Artyom();
-
-</script>
-
-<style>
-
-
-
-video, canvas {
-
-
-
-margin-left: 38%;
-
-
-
-margin-top: 40px;
-
-
-
-position: absolute;
-
-
-
-}
-
-
-
-#homediv {
-
-min-height: 550px;
-
-}
-
-body, html {
-
-height: auto;
-
-margin: 0;
-
-}
-
-.bgf{
-
-background:url('digitech3.jpg') center center no-repeat;
-
-background-size:100px 150px;
-
-}
-
-
-
-.auth-container{
-
-height: auto;
-
-width: auto;
-
-background-image: url("digitech3.jpg");
-
--webkit-background-size: cover;
-
--moz-background-size: cover;
-
--o-background-size: cover;
-
-background-size: cover;
-
-}
-
-
-
-
-
-
-
-</style>
-
-
-
-</head>
-
-<body>
-
-<div class="auth-container">
-
-
-<div id="homediv">
-
-
-<header align="center">
-
-<nav class="navbar navbar-inverse">
-
-<div class="container-fluid">
-
-<div class="navbar-header">
-
-<a class="navbar-brand" href="#"></a>
-
-</div>
-
-<ul class="nav navbar-nav">
-
-<li class="active"><a href="http://192.168.1.130:4200/assets/imagedetection/face_camera.html">Face Detection</a></li>
-
-<li><a href="http://192.168.1.130:4200">Home</a></li>
-
-<li><a href="http://192.168.1.130:4200/checkemail">Register</a></li>
-
-<li><a href="http://192.168.1.130:4200/login">Login</a></li>
-
-</ul>
-
-</div>
-
-</nav>
-
-
-
-</header>
-
-
-
-
-
-
-
-<div align="center">
-
-<div><b><i>Select Voice</i></b>
-
-<input type="radio" id="contactChoice1"
-
-name="voiceselect" value="Google UK English Male" onclick="changeVoice()">
-
-<label for="contactChoice1">Male</label>
-
-<input type="radio" id="contactChoice2"
-
-name="voiceselect" value="Google UK English Female" onclick="changeVoice()" checked>
-
-<label for="contactChoice2">Female</label> 
-
-</div>
-
-<div>
-
-<img class="employeeImage img-circle" src="http://192.168.1.130:8080/images/userProfile.jpg" height="110" width="110"/></div>
-
-<b><i><div class="employeeName">Hello! Please look in front of the camera</div></i></b>
-
-<b><i><div class="hello"></div></i></b>
-
-
-</div>
-
-
-
-<div>
-
-<canvas id="snapshotCanvas" width="320" height="240"></canvas>
-
-<video id="video" width="320" height="240" preload autoplay loop muted></video>
-
-<canvas id="canvas" width="320" height="240"></canvas>
-
-</div>
-
-
-
-</div>
-
-
-
-
-
-
-
-<script>
-
-var voiseSelect="Google UK English Female";
-
-function changeVoice()
-
-{
-
-
-voiseSelect = document.querySelector('input[name="voiceselect"]:checked').value;
-
-console.log(voiseSelect);
-
-}
-
-
-
-
-var arr = [ "Abhishek", "Hamada"];
-
-artyom.addCommands({
-
-indexes:["Yes","Yeah","Okay","Ok","Sure"],
-
-action: function(i){
-
-var voices = window.speechSynthesis.getVoices();
-
-var intializeVoiceGreeting = new SpeechSynthesisUtterance('You can call the following employees.'+arr+'.To call an employee say Call followed by their name.');
-
-intializeVoiceGreeting.voice = voices.filter(function(voice) { return voice.name == voiseSelect; })[0];
-
-window.speechSynthesis.speak(intializeVoiceGreeting);
-
-}
-
-});
-
-
-
-artyom.addCommands({
-
-indexes:["No","Nope","No thanks"],
-
-action: function(i){
-
-var voices = window.speechSynthesis.getVoices();
-
-var intializeVoiceGreeting = new SpeechSynthesisUtterance('Thankyou for visiting us');
-
-intializeVoiceGreeting.voice = voices.filter(function(voice) { return voice.name == voiseSelect; })[0];
-
-window.speechSynthesis.speak(intializeVoiceGreeting);
-
-}
-
-});
-
-
-
-artyom.addCommands({
-
-smart:true,
-
-indexes:["Call *"], 
-
-action:function(i,wildcard){
-
-switch(wildcard){
-
-case "hamada":
-
-var voices = window.speechSynthesis.getVoices();
-
-var intializeVoiceGreeting = new SpeechSynthesisUtterance('Unfortunately, Hamada is not available at this moment.');
-
-intializeVoiceGreeting.voice = voices.filter(function(voice) { return voice.name == voiseSelect; })[0];
-
-window.speechSynthesis.speak(intializeVoiceGreeting);
-
-break;
-
-case "abhishek":
-
-var voices = window.speechSynthesis.getVoices();
-
-var intializeVoiceGreeting = new SpeechSynthesisUtterance('Abhishek will be there with you shortly');
-
-intializeVoiceGreeting.voice = voices.filter(function(voice) { return voice.name == voiseSelect; })[0];
-
-window.speechSynthesis.speak(intializeVoiceGreeting);
-
-break;
-
-default:
-
-var voices = window.speechSynthesis.getVoices();
-
-var intializeVoiceGreeting = new SpeechSynthesisUtterance('I am sorry. I do not recognize the command');
-
-intializeVoiceGreeting.voice = voices.filter(function(voice) { return voice.name == voiseSelect; })[0];
-
-window.speechSynthesis.speak(intializeVoiceGreeting);
-
-break;
-
-}
-
-}
-
-});
-
-
-var check; var counter=0;
-
-var voices = window.speechSynthesis.getVoices();
-
-var intializeVoiceGreeting = new SpeechSynthesisUtterance('');
-
-intializeVoiceGreeting.voice = voices.filter(function(voice) { return voice.name == voiseSelect; })[0];
-
-window.speechSynthesis.speak(intializeVoiceGreeting);
-
-
-
-$(document).ready(function() {
-
-
-var isFaceDetected = 0; 
-
-var getEmployeeData = function(employeeId){
-
-$.ajax ({
-
-url: "http://192.168.1.130:8080/employee/"+employeeId,
-
-type: "GET",
-
-dataType: "json",
-
-contentType: "application/json; charset=utf-8",
-
-success: function(employee){
-
-if(employee.result!=null){
-
-$(".employeeImage").attr("src","http://192.168.1.130:8080/images/"+employee.result.picture);
-
-$(".employeeName").html("Welcome "+employee.result.firstName+" "+employee.result.lastName);
-
-$(".hello").html("");
-
-if(employee.result.firstName!=check)
-
-{
-
-check=employee.result.firstName; 
-
-var voices = window.speechSynthesis.getVoices();
-
-var spokenGreeting = new SpeechSynthesisUtterance('Welcome'+employee.result.firstName);
-
-spokenGreeting.voice = voices.filter(function(voice) { return voice.name == voiseSelect; })[0];
-
-window.speechSynthesis.speak(spokenGreeting);
-
-counter=0;
-
-}
-
-}else{
-
-$(".employeeImage").attr("src","http://192.168.1.130:8080/images/userProfile.jpg");
-
-$(".employeeName").html("Hello! Please look in front of the camera.");
-
-
-}
-
-
-}
-
-});
-
-
-
-}
-
-//console.log("document loaded");
-
-var video = document.getElementById('video');
-
-
-
-var canvas = document.getElementById('canvas');
-
-
-
-var context = canvas.getContext('2d');
-
-
-
-
-
-
-
-var tracker = new tracking.ObjectTracker('face');
-
-
-
-tracker.setInitialScale(4);
-
-
-
-tracker.setStepSize(2);
-
-
-
-tracker.setEdgesDensity(0.1);
-
-
-
-
-
-var count = 1;
-
-
-
-
-
-
-
-setInterval(function() { 
-
-
-
-count=1;
-
-
-
-},4000);
-
-
-
-
-
-tracking.track('#video', tracker, { camera: true });
-
-
-
-
-
-
-
-tracker.on('track', function(event) {
-
-
-
-if(count==1){
-
-
-
-
-
-var snapshotContext = snapshotCanvas.getContext('2d');
-
-
-
-//draw image to canvas. scale to target dimensions
-
-
-
-snapshotContext.drawImage(video, 0, 0, video.width, video.height);
-
-
-
-
-
-//convert to desired file format
-
-
-
-var dataURI = snapshotCanvas.toDataURL('image/jpeg'); // can also use 'image/png'
-
-
-
-//This dataURI is what you would use to get the actual image
-
-jQuery.ajax ({
-
-url: "http://192.168.1.130:5000/predict",
-
-type: "POST",
-
-data: JSON.stringify({imguri: dataURI}),
-
-dataType: "json",
-
-contentType: "application/json; charset=utf-8",
-
-success: function(employee){
-
-if(employee.employeeId==-1){
-
-$(".employeeImage").attr("src","http://192.168.1.130:8080/images/userProfile.jpg");
-
-if(isFaceDetected == 0){
-
-counter=0;
-
-$(".employeeName").html("Hello! Please look in front of the camera.");
-
-$(".hello").html("");
-
-check="";
-
-
-}else{
-
-artyom.initialize({
-
-lang:"en-GB",// More languages are documented in the library
-
-continuous:false,//if you have https connection, you can activate continuous mode
-
-debug:true,//Show everything in the console
-
-listen:true // Start listening when this function is triggered
-
-});
-
-$(".employeeName").html("The system can not recognize your face, Would you like me to call an employee for assistance?");
-
-$(".hello").html("If you already have an employee account, please <a href='http://192.168.1.130:4200/login'>login</a> to have your pictures taken.");
-
-if(counter==0)
-
-{
-
-var voices = window.speechSynthesis.getVoices();
-
-var spokenGreeting = new SpeechSynthesisUtterance('The system can not recognize your face, Would you like me to call an employee for assistance?');
-
-spokenGreeting.voice = voices.filter(function(voice) { return voice.name == voiseSelect; })[0];
-
-window.speechSynthesis.speak(spokenGreeting);
-
-counter=counter+1;
-
-}
-
-
-}
-
-
-}else{
-
-console.log(employee.employeeId)
-
-getEmployeeData(employee.employeeId);
-
-
-}
-
-}
-
-});
-
-isFaceDetected=0;
-
-
-
-}
-
-
-
-count++;
-
-
-
-context.clearRect(0, 0, canvas.width, canvas.height);
-
-
-
-
-
-
-
-
-
-
-
-event.data.forEach(function(rect) {
-
-
-
-context.strokeStyle = '#a64ceb';
-
-
-
-context.strokeRect(rect.x, rect.y, rect.width, rect.height);
-
-
-
-context.font = '11px Helvetica';
-
-
-
-context.fillStyle = "#fff";
-
-
-
-isFaceDetected = 1;
-
-
-
-});
-
-
-
-});
-
-});
-
-
-
-
-
-
-
-</script>
-
-</div>
-
-
-
-
-<footer id="myfooter" class="">
-
-<div class="navbar navbar-inverse">
-
-<div>
-
-<div class="navbar-brand">
-
-<div>
-
-<a href="http://www.macrosoftinc.com/">Visit Our Website</a> | <a href="http://www.macrosoftinc.com/contact-us.html">Contact Us</a><br>
-
-<div class="navbar-right">
-
-<span> © 2017 Macrosoft Inc. All rights reserved</span>
-
-</div>
-
-</div>
-
-
-</div>
-
-</div>
-
-</div>
-
-</footer>
-
-
-</body>
-
-
-
-
-
-
-
-</html>
-
+    
+    <head>
+    <meta charset="utf-8">
+    <title>Face Recognition</title>
+    
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
+    integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    
+    <!-- Optional theme -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css"
+    integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+    
+    <link rel="stylesheet" href="./faceRecognition.css">
+    <!-- Latest compiled and minified JavaScript -->
+    
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+    
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
+    crossorigin="anonymous"></script>
+    
+    <script src="./tracking-min.js"></script>
+    
+    <script src="./face-min.js"></script>
+    
+    <script src="./artyom.window.min.js"></script>
+    
+    <script src="./faceRecognition.js"></script>
+    </head>
+    
+    <body>
+    
+      <div class="auth-container">
+    
+        <div id="homediv">
+          <header align="center">
+            <nav class="navbar navbar-inverse">
+              <div class="container-fluid">
+                <ul class="nav navbar-nav">
+                  <li><a href="http://localhost:4200">Home</a></li>
+                  <li><a href="http://localhost:4200/login">Login</a></li>
+                  <li><a href="http://localhost:4200/checkemail">Register</a></li>
+                  <li class="active"><a href="http://localhost:4200/assets/imagedetection/face_camera.html">Face
+                    Detection</a></li>
+                </ul>
+    
+              </div>
+    
+            </nav>
+          </header>
+        <div align="center">
+          <div class="canvasContainer">
+            <canvas id="snapshotCanvas" width="320" height="240"></canvas>
+            <video id="video" width="320" height="240" preload autoplay loop muted></video>
+            <canvas id="canvas" width="320" height="240"></canvas>
+          </div>
+          <div class="profilePicture">
+            <img class="employeeImage img-circle" src="http://localhost:8080/images/userProfile.jpg" height="110" width="110"/>
+            <b>
+                <i>
+                  <div class="employeeName">Hello! Please look in front of the camera</div>
+                </i>
+              </b>
+              <b>
+                <i>
+                  <div class="hello">
+                  </div>
+                </i>
+              </b>
+          
+          <div class="showEmployees ">
+            <table class="table hidden" id="employeesTable">
+              <thead>
+                <tr>
+                  <th scope="col">#</th>
+                  <th scope="col">First Name</th>
+                  <th scope="col">Last Name</th>
+                  <th scope="col">Phone</th>
+                </tr>
+              </thead>
+              <tbody>
+
+               
+                </tbody>
+            </table>
+          </div>
+        </div>
+        </div>
+        
+      </div>
+      <footer id="myfooter" class="">
+        <div class="navbar navbar-inverse">
+          <div>
+            <div class="navbar-brand">
+              <div>
+                <a href="https://www.macrosoftinc.com/">Visit Our Website</a> | <a href="https://www.macrosoftinc.com/contact-us.html">Contact Us</a><br>
+                <div class="navbar-right">
+                <span> © 2017 Macrosoft Inc. All rights reserved</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </footer>
+    </body>
+ </html>

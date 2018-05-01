@@ -12,7 +12,7 @@ export class TrainingService{
 training(id)
 {
     
-    return this.http.get('http://192.168.1.130:5000/takePictures/'+id);
+    return this.http.get('http://127.0.0.1:5000/takePictures/'+id);
 }
 }
 

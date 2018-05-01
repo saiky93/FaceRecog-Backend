@@ -80,7 +80,7 @@ export class CompanyUpdateEmplpoyeeComponent implements OnInit {
   
     
     this.employee.employee=empy;
-     this.pictureWithUrl ="http://192.168.1.130:8080/images/"+empy.picture;
+     this.pictureWithUrl ="http://localhost:8080/images/"+empy.picture;
      console.log(this.employee.employee.picture);
      
    },(error) => console.log(error)
