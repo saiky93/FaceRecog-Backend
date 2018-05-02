@@ -27,7 +27,7 @@ var say = function (statement) {
 };
 
 var startConversation = function() {
-    say("Do you want me to call an employee for you ? if yes please say the first or the last name of the employee.")
+    say("Do you want me to call an employee for assistance? if yes please say the first or the last name of the employee.")
     setInterval(function() { 
         console.log("started listening")
         listen(0);
