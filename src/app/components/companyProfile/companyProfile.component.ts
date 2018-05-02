@@ -50,7 +50,6 @@ export class CompanyProfileComponent implements OnInit {
       {
         firstName: '',
         lastName: '',
-        sSN: '',
         addressLine1: '',
         addressLine2: '',
         country: '',
