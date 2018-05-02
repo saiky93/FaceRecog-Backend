@@ -7,7 +7,6 @@ import { RouterModule, Routes } from '@angular/router'; //used for routes
 
 //importing components
 import { AppComponent } from './app.component'; //this is the root component
-import { HomeComponent } from './components/homecomponent/homecomponent.component'; //this is our homepage
 import { LoginComponent } from './components/login/login.component'; //this is  login page and create new account option will be here
 import {EmployeeProfileComponent} from './components/employeeProfile/employee.profile.component'; // this is employee profile page
 import { AddEmployeeComponent } from './components/addEmployee/addemployee.component';// this is employee login page
@@ -43,8 +42,7 @@ import { TakepicturesComponent } from './components/takepictures/takepictures.co
 
 //router links - path is the /sublink. mention the component to load for a sublink under component
 const appRoutes: Routes = [
-  {path:'', component:HomeComponent},
-  {path:'login', component:LoginComponent},
+  {path:'', component:LoginComponent},
   {path:'companyProfile', component:CompanyProfileComponent, canActivate: [AuthGuardCompany]},
   {path:'employeeProfile', component:EmployeeProfileComponent, canActivate: [AuthGuardEmployee]},
   {path:'csignup', component: CompanysignupComponent},
@@ -63,7 +61,6 @@ const appRoutes: Routes = [
 @NgModule({
   declarations: [
     AppComponent,
-    HomeComponent,
     LoginComponent,
     EmployeeProfileComponent,
     CompanysignupComponent,
