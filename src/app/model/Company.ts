@@ -28,7 +28,6 @@ export class Company {
     employee: {
             firstName: string;
             lastName: string;
-            sSN : string;
             addressLine1: string;
             addressLine2: string;
             country: string;

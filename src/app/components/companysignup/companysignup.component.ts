@@ -55,7 +55,6 @@ export class CompanysignupComponent implements OnInit {
       {
         firstName: '',
         lastName: '',
-        sSN : '',
         addressLine1: '',
         addressLine2: '',
         country: '',

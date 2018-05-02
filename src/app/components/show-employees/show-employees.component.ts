@@ -91,8 +91,6 @@ firstName: '',
 
 lastName: '',
 
-sSN : '',
-
 addressLine1: '',
 
 addressLine2: '',
