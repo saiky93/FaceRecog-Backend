@@ -45,7 +45,7 @@ $(document).ready(function() {
                             say("I am so sorry I could not again recognize your face, could you please come close to the camera?");
                             noOfTries = 3;
                         }else if(noOfTries == 3 && sessionStarted == false){
-                            say("I am sorry the system can not recognize your face, how may I help you ?");
+                            say("I am sorry the system can not recognize your face.");
                             noOfTries = 1;
                             sessionStarted = true;
                             startConversation();
