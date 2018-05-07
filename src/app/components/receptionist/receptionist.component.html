@@ -1,0 +1,32 @@
+<app-navbar1></app-navbar1>
+
+<div class="container">
+  <h1 class="text-center">Receptionist</h1>
+</div>
+
+
+<div class="row mb-3">
+  <div class="col btn-group">
+    <button
+      class="btn btn-primary col-6"
+      (click)="speech.startListening()"
+      [disabled]="speech.listening">
+        {{btnLabel}}
+    </button>
+
+    <button
+      class="btn btn-danger col-6"
+      (click)="speech.abort()"
+      [disabled]="!speech.listening">
+        Stop
+    </button>
+  </div>
+</div>
+
+<div class="row" *ngIf="errorMsg">
+  <div class="col">
+    <p class="alert alert-warning">
+      {{errorMsg}}
+    </p>
+  </div>
+</div>

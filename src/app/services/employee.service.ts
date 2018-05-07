@@ -56,6 +56,13 @@ export class EmployeeService{
         });
             
     }
+
+    getEmployeesByFirstOrLastName(employeeName: String){
+        return this.http.get('http://localhost:8080/employee/byFirstOrLastName/'+employeeName).map((response:Response) => {
+            const employeeName = response.json().result;
+            return employeeName;
+        });
+    }
    
     getUserInfo()
     {

@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Company } from '../../model/company';
-import { EmployeeService} from '../../services/employee.service'
+import { EmployeeService} from '../../services/employee.service';
 import {Router} from '@angular/router';
 import { AuthenticationService} from '../../services/authentication.service';
 import { Observable }     from 'rxjs/Observable';

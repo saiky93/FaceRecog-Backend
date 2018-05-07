@@ -4,6 +4,7 @@ import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';  //used for angular forms and ngmodel
 import { HttpModule } from '@angular/http';   //used for http services get post etc.
 import { RouterModule, Routes } from '@angular/router'; //used for routes
+import { SpeechModule } from 'ngx-speech';
 
 //importing components
 import { AppComponent } from './app.component'; //this is the root component
@@ -36,13 +37,16 @@ import { DataService } from './services/data.service';
 import { AuthenticationService } from './services/authentication.service';
 import { TrainingService} from './services/training.service';
 import { AuthGuardCompany } from './guards/auth.guard.company';
+import { SpeechService } from './services/speech.service';
 import { AuthGuardEmployee } from './guards/auth.guard.employee';
 import { UploadCsvComponent } from './components/upload-csv/upload-csv.component';
 import { TakepicturesComponent } from './components/takepictures/takepictures.component';
+import { ReceptionistComponent } from './components/receptionist/receptionist.component';
 
 //router links - path is the /sublink. mention the component to load for a sublink under component
 const appRoutes: Routes = [
   {path:'', component:LoginComponent},
+  {path:'receptionist', component:ReceptionistComponent},
   {path:'companyProfile', component:CompanyProfileComponent, canActivate: [AuthGuardCompany]},
   {path:'employeeProfile', component:EmployeeProfileComponent, canActivate: [AuthGuardEmployee]},
   {path:'csignup', component: CompanysignupComponent},
@@ -79,17 +83,19 @@ const appRoutes: Routes = [
     Navbar2Component,
     Navbar3Component,
     Navbar4Component,
+    ReceptionistComponent,
   
    
   ],
   imports: [
     BrowserModule,
     FormsModule,
+    SpeechModule,
     HttpModule,
     RouterModule.forRoot(appRoutes)
 
   ],
-  providers: [TrainingService,CompanyService,EmployeeService,IsEmailExistsService,DataService,AuthGuardCompany,AuthGuardEmployee,AuthenticationService,CompanyProfileService,AddEmployeeService],
+  providers: [TrainingService,{ provide: 'SPEECH_LANG', useValue: 'en-US' },CompanyService,SpeechService,EmployeeService,IsEmailExistsService,DataService,AuthGuardCompany,AuthGuardEmployee,AuthenticationService,CompanyProfileService,AddEmployeeService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
