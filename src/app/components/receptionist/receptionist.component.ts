@@ -29,7 +29,8 @@ export class ReceptionistComponent implements OnInit {
   employeeData : any [];
   employeeEmail : any [];
   showEmployee: boolean;
-
+  voices:any[];
+  timer;
   constructor(public speech: SpeechService, public employeeService: EmployeeService) {
     this.employeeInfo={
       email:''
@@ -39,15 +40,34 @@ export class ReceptionistComponent implements OnInit {
 
     const {SpeechSynthesisUtterance}: IWindow = <IWindow>window;
     const {speechSynthesis}: IWindow = <IWindow>window;
+
+    //this timer will run until we have list voices from speech api in the this.voices array
+    this.timer = setInterval(()=>{
+      this.getSpeechVoices();
+    },200);
+
    }
 
    say(utterence: string)
    {
     //method to be used for speech synthesis
     var voiceGreeting = new SpeechSynthesisUtterance(utterence);
+    voiceGreeting.voice=this.voices.filter(function(voice) { return voice.name == "Google UK English Female"; })[0];
     (<any>window).speechSynthesis.speak(voiceGreeting);
 
    }
+
+ getSpeechVoices()
+ {
+   this.voices = (<any>window).speechSynthesis.getVoices();
+   if(this.voices.length!==0)
+   {
+     console.log(this.voices);
+     this.say("");//this will pre set say() function to be used later on
+     clearInterval(this.timer);
+   }
+   
+ }
    
 
   ngOnInit() {
