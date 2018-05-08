@@ -5,6 +5,8 @@ import { EmployeeService} from '../../services/employee.service';
 import 'rxjs/add/operator/filter';
 import 'rxjs/add/operator/map';
 import {Company} from '../../model/Company';
+import { IWindow } from './custom.window';
+
 @Component({
   selector: 'app-receptionist',
   templateUrl: './receptionist.component.html',
@@ -34,6 +36,17 @@ export class ReceptionistComponent implements OnInit {
     };
 
     this.showEmployee=true;
+
+    const {SpeechSynthesisUtterance}: IWindow = <IWindow>window;
+    const {speechSynthesis}: IWindow = <IWindow>window;
+   }
+
+   say(utterence: string)
+   {
+    //method to be used for speech synthesis
+    var voiceGreeting = new SpeechSynthesisUtterance(utterence);
+    (<any>window).speechSynthesis.speak(voiceGreeting);
+
    }
    
 
