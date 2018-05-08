@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Http, Response,RequestOptions, Headers } from '@angular/http';
+import { Http, Response, RequestOptions, Headers } from '@angular/http';
 import 'rxjs/Rx';
 
 @Injectable()
@@ -58,10 +58,14 @@ export class EmployeeService{
     }
 
     getEmployeesByFirstOrLastName(employeeName: String){
-        return this.http.get('http://localhost:8080/employee/byFirstOrLastName/'+employeeName).map((response:Response) => {
+        return this.http.get('http://localhost:8080/employee/byFirstOrLastName/'+employeeName,this.jwt()).map((response:Response) => {
             const employeeName = response.json().result;
             return employeeName;
         });
+    }
+
+    getEmployeeUserEmailForSpeech(employeeId){
+        return this.http.get('http://localhost:8080/user/employee/'+employeeId).map(this.extractData);
     }
    
     getUserInfo()
@@ -76,6 +80,12 @@ export class EmployeeService{
     }
    
 
+    private extractData(res: Response)
+    {
+        let body = res.json();
+        return body['result'];
+
+    }
  
     private jwt() {
         // create authorization header with jwt token

@@ -4,7 +4,7 @@ import { Subscription } from 'rxjs/Subscription';
 import { EmployeeService} from '../../services/employee.service';
 import 'rxjs/add/operator/filter';
 import 'rxjs/add/operator/map';
-
+import {Company} from '../../model/Company';
 @Component({
   selector: 'app-receptionist',
   templateUrl: './receptionist.component.html',
@@ -22,8 +22,11 @@ export class ReceptionistComponent implements OnInit {
   parsiSub: Subscription;
   errorsSub: Subscription;
   errorMsg:string;
-
-  constructor(public speech: SpeechService, public employeeService: EmployeeService) { }
+  employeeId:number;
+  employeeData : any [];
+  employeeEmail : any [];
+  constructor(public speech: SpeechService, public employeeService: EmployeeService) {
+   }
 
   ngOnInit() {
     this.speech.init();
@@ -47,6 +50,12 @@ export class ReceptionistComponent implements OnInit {
           this._setError();
           console.log('emps', emps);
           this.showEmployeeData(emps);
+          //if he says 1.This variable will be initialized with id said by user
+          var employeeIdFromSpeech;
+
+          //this.showEmployeeEmail(73);
+           
+          
         }
       );
   }
@@ -112,7 +121,17 @@ export class ReceptionistComponent implements OnInit {
   showEmployeeData(employeeNameFromSpeech){
     this.employeeService.getEmployeesByFirstOrLastName(employeeNameFromSpeech).subscribe((data)=>{
       console.log(data);
+      this.employeeData=data;
     });
-    }
+
+  }
+  
+  showEmployeeEmail(employeeId){
+    this.employeeService.getEmployeeUserEmailForSpeech(employeeId).subscribe(
+      (data) => {
+            console.log(data);
+            this.showEmployeeEmail=data;
+    });
+  }
 
 }
