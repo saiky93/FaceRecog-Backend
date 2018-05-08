@@ -11,7 +11,9 @@ export class SpeechService {
 
   listening = false;
 
-  constructor(private zone: NgZone) { }
+  constructor(private zone: NgZone) {
+    console.log("speeechhhh");
+   }
 
   get speechSupported(): boolean {
     return !!annyang;
