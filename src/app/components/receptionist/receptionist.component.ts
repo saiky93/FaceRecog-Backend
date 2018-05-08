@@ -23,10 +23,19 @@ export class ReceptionistComponent implements OnInit {
   errorsSub: Subscription;
   errorMsg:string;
   employeeId:number;
+  employeeInfo: any;
   employeeData : any [];
   employeeEmail : any [];
+  showEmployee: boolean;
+
   constructor(public speech: SpeechService, public employeeService: EmployeeService) {
+    this.employeeInfo={
+      email:''
+    };
+
+    this.showEmployee=true;
    }
+   
 
   ngOnInit() {
     this.speech.init();
@@ -53,8 +62,8 @@ export class ReceptionistComponent implements OnInit {
           //if he says 1.This variable will be initialized with id said by user
           var employeeIdFromSpeech;
 
-          //this.showEmployeeEmail(73);
-           
+          
+          // this.showEmployeeEmail(emps);
           
         }
       );
@@ -68,6 +77,8 @@ export class ReceptionistComponent implements OnInit {
       emp1 => {
         this._setError();
         console.log('emp1', emp1);
+        this.showEmployeeInfo(emp1);
+      
       }
     );
   }
@@ -122,16 +133,19 @@ export class ReceptionistComponent implements OnInit {
     this.employeeService.getEmployeesByFirstOrLastName(employeeNameFromSpeech).subscribe((data)=>{
       console.log(data);
       this.employeeData=data;
+      this.showEmployee = false;
+      
     });
 
   }
-  
-  showEmployeeEmail(employeeId){
-    this.employeeService.getEmployeeUserEmailForSpeech(employeeId).subscribe(
-      (data) => {
-            console.log(data);
-            this.showEmployeeEmail=data;
-    });
+
+  showEmployeeInfo(employeeId){
+    this.employeeService.getEmployeeEmail(employeeId).subscribe((data)=>{
+      console.log(data);
+      this.employeeInfo = data;
+      this.showEmployee = true;
+
+    })
   }
 
 }

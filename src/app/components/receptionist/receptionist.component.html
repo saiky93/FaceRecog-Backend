@@ -1,7 +1,7 @@
 <app-navbar1></app-navbar1>
 
 <div class="container">
-  <h1 class="text-center">Receptionist</h1>
+  <h1 class="text-center"><marquee><i>Front Desk Receptionist</i></marquee></h1>
 </div>
 
 
@@ -33,8 +33,19 @@
   </div>
 </div>
 
-<div class = "showEmployees">
+<div [hidden] = "showEmployee">
       <div>
-        <li *ngFor = "let employee of employeeEmail"> {{employee.email}}</li>
+        <h1>The employees with similar names are:</h1>
+        <table class="table-striped">
+          <tr><td><h2>EmployeeId</h2></td> <td><h2>FirstName</h2></td> <td><h2>LastName</h2></td></tr>
+          <tr *ngFor="let employee of employeeData">
+              <td><h2>{{employee.id}}</h2></td> <td><h2>{{employee.firstName}}</h2></td> <td><h2>{{employee.lastName}}</h2></td>       
+          </tr>
+        </table>
+
+        <div>
+          <h2><i>{{employeeInfo.email}}</i></h2>
+        </div>
+
       </div>
     </div>

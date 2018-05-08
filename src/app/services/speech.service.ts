@@ -35,13 +35,6 @@ init(){
       });
     },
 
-    'session :end': (end) => {
-      this.zone.run(() => {
-        this.words$.next({type: 'end', 'word': end});
-        console.log("end");
-      });
-    },
-
     'weather :parsippany': (parsippany) => {
       this.zone.run(() => {
         this.words$.next({type: 'parsippany', 'word': parsippany});

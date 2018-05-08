@@ -67,6 +67,10 @@ export class EmployeeService{
     getEmployeeUserEmailForSpeech(employeeId){
         return this.http.get('http://localhost:8080/user/employee/'+employeeId).map(this.extractData);
     }
+
+    getEmployeeEmail(employeeId){
+        return this.http.get('http://localhost:8080/user/employee/'+employeeId).map(this.extractData);
+    }
    
     getUserInfo()
     {
