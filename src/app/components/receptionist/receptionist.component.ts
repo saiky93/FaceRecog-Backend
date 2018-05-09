@@ -65,6 +65,12 @@ export class ReceptionistComponent implements OnInit {
      console.log(this.voices);
      this.say("");//this will pre set say() function to be used later on
      clearInterval(this.timer);
+     this.say("welcome to Macrosoft. How May I help you? If you want me to call an employee, say employee followed by their first name or last name")
+     setTimeout((
+     )=>{
+       this.speech.startListening();
+       
+     },10000);
    }
    
  }
@@ -79,12 +85,7 @@ export class ReceptionistComponent implements OnInit {
     this._listenErrors();
     this.speech.abort();
     
-    this.say("welcome to Macrosoft. How May I help you? If you want me to call an employee, say employee followed by their first name or last name")
-    setTimeout((
-    )=>{
-      this.speech.startListening();
-      
-    },10000);
+
     // this.speech.startListening();  
   }
 
