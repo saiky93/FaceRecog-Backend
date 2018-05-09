@@ -77,11 +77,24 @@ export class ReceptionistComponent implements OnInit {
     this._listenEnd();
     this._listenParsi();
     this._listenErrors();
+    this.speech.abort();
+    
+    this.say("welcome to Macrosoft. How May I help you? If you want me to call an employee, say employee followed by their first name or last name")
+    setTimeout((
+    )=>{
+      this.speech.startListening();
+      
+    },10000);
+    // this.speech.startListening();  
   }
+
+  
 
   get btnLabel(): string {
     return this.speech.listening ? 'Listening...' : 'Listen';
   }
+
+  
   
   private _listenEmps(){
     this.empsSub = this.speech.words$
@@ -94,8 +107,16 @@ export class ReceptionistComponent implements OnInit {
           this.showEmployeeData(emps);
           //if he says 1.This variable will be initialized with id said by user
           var employeeIdFromSpeech;
-
           
+          this.speech.abort();
+          this.say("The employees that I can find with similar names in the system are shown on the window.");
+          this.say("If you did not find the employee that you are looking for in the table, say employee followed by their first name or last name.");
+          this.say("if you found the employee that you are looking for in the table, say inform followed by their employee id displayed in the table.")
+          setTimeout((
+          )=>{
+            this.speech.startListening();
+            
+          },22000);
           // this.showEmployeeEmail(emps);
           
         }
@@ -111,7 +132,14 @@ export class ReceptionistComponent implements OnInit {
         this._setError();
         console.log('emp1', emp1);
         this.showEmployeeInfo(emp1);
-      
+        this.speech.abort();
+        this.say("I have informed to the employee and he will be there with you shortly.");
+        this.say("thank you for coming to macrosoft and have a nice day.");
+        setTimeout((
+        )=>{
+          this.speech.startListening();
+          
+        },13000);
       }
     );
   }
