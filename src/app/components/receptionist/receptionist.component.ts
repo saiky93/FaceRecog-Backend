@@ -31,6 +31,7 @@ export class ReceptionistComponent implements OnInit {
   showEmployee: boolean;
   voices:any[];
   timer;
+abc;
   constructor(public speech: SpeechService, public employeeService: EmployeeService) {
     this.employeeInfo={
       email:''
@@ -51,10 +52,15 @@ export class ReceptionistComponent implements OnInit {
    say(utterence: string)
    {
     //method to be used for speech synthesis
+    var abc = this.speech;
     var voiceGreeting = new SpeechSynthesisUtterance(utterence);
     voiceGreeting.voice=this.voices.filter(function(voice) { return voice.name == "Google UK English Female"; })[0];
     (<any>window).speechSynthesis.speak(voiceGreeting);
-
+    voiceGreeting.onend = function()
+    {
+      abc.abort();
+      abc.startListening();
+    }
    }
 
  getSpeechVoices()
@@ -65,12 +71,13 @@ export class ReceptionistComponent implements OnInit {
      console.log(this.voices);
      this.say("");//this will pre set say() function to be used later on
      clearInterval(this.timer);
+     this.speech.abort();
      this.say("welcome to Macrosoft. How May I help you? If you want me to call an employee, say employee followed by their first name or last name")
-     setTimeout((
-     )=>{
-       this.speech.startListening();
+    //  setTimeout((
+    //  )=>{
+    //    this.speech.startListening();
        
-     },10000);
+    //  },10000);
    }
    
  }
@@ -113,11 +120,11 @@ export class ReceptionistComponent implements OnInit {
           this.say("The employees that I can find with similar names in the system are shown on the window.");
           this.say("If you did not find the employee that you are looking for in the table, say employee followed by their first name or last name.");
           this.say("if you found the employee that you are looking for in the table, say inform followed by their employee id displayed in the table.")
-          setTimeout((
-          )=>{
-            this.speech.startListening();
+          // setTimeout((
+          // )=>{
+          //   this.speech.startListening();
             
-          },22000);
+          // },22000);
           // this.showEmployeeEmail(emps);
           
         }
@@ -136,11 +143,11 @@ export class ReceptionistComponent implements OnInit {
         this.speech.abort();
         this.say("I have informed to the employee and he will be there with you shortly.");
         this.say("thank you for coming to macrosoft and have a nice day.");
-        setTimeout((
-        )=>{
-          this.speech.startListening();
+        // setTimeout((
+        // )=>{
+        //   this.speech.startListening();
           
-        },13000);
+        // },13000);
       }
     );
   }
