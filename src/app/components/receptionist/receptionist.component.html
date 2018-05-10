@@ -5,7 +5,7 @@
 </div>
 
 
-<div class="row mb-3">
+<!-- <div class="row mb-3">
   <div class="col btn-group">
     <button
       class="btn btn-primary col-6"
@@ -23,7 +23,7 @@
         Stop
     </button>
   </div>
-</div>
+</div> -->
 
 <div class="row" *ngIf="errorMsg">
   <div class="col">
@@ -33,13 +33,13 @@
   </div>
 </div>
 
-<div [hidden] = "showEmployee">
+<div class="container" [hidden] = "showEmployee">
       <div>
-        <h1>The employees with similar names are:</h1>
-        <table class="table-striped">
+        <h1>The employees with similar names are:</h1><br>
+        <table class="table table-responsive table-striped table-bordered">
           <tr><td><h2>EmployeeId</h2></td> <td><h2>FirstName</h2></td> <td><h2>LastName</h2></td></tr>
           <tr *ngFor="let employee of employeeData">
-              <td><h2>{{employee.id}}</h2></td> <td><h2>{{employee.firstName}}</h2></td> <td><h2>{{employee.lastName}}</h2></td>       
+              <td><h4>{{employee.id}}</h4></td> <td><h4>{{employee.firstName}}</h4></td> <td><h4>{{employee.lastName}}</h4></td>       
           </tr>
         </table>
 
