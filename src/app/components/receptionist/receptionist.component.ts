@@ -1,7 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ElementRef } from '@angular/core';
 import { SpeechService } from '../../services/speech.service';
+import {DomSanitizer} from '@angular/platform-browser';
 import { Subscription } from 'rxjs/Subscription';
 import { EmployeeService} from '../../services/employee.service';
+import {WebCamComponent } from 'ng2-webcam';
 import 'rxjs/add/operator/filter';
 import 'rxjs/add/operator/map';
 import {Company} from '../../model/Company';
@@ -31,8 +33,10 @@ export class ReceptionistComponent implements OnInit {
   showEmployee: boolean;
   voices:any[];
   timer;
-abc;
-  constructor(public speech: SpeechService, public employeeService: EmployeeService) {
+  public videosrc : any;
+  abc;
+
+  constructor(public speech: SpeechService, public employeeService: EmployeeService,private sanitizer:DomSanitizer, private element:ElementRef) {
     this.employeeInfo={
       email:''
     };
@@ -91,12 +95,26 @@ abc;
     this._listenParsi();
     this._listenErrors();
     this.speech.abort();
+    this.showCam();
     
 
     // this.speech.startListening();  
   }
 
-  
+  private showCam() {
+    let nav = <any>navigator;
+
+    nav.getUserMedia = nav.getUserMedia || nav.mozGetUsermedia || nav.webkitGetUserMedia;
+
+    nav.getUserMedia(
+      {video: true},
+      (stream) => {
+        let webcamUrl = URL.createObjectURL(stream);
+        this.videosrc = this.sanitizer.bypassSecurityTrustUrl(webcamUrl);
+        this.element.nativeElement.querySelector('video').autoplay = true;
+      },
+      (err) => console.log(err));
+  }
 
   get btnLabel(): string {
     return this.speech.listening ? 'Listening...' : 'Listen';
