@@ -1,4 +1,4 @@
-import { Component, OnInit, ElementRef } from '@angular/core';
+import { Component, OnInit, ElementRef, ViewChild } from '@angular/core';
 import { SpeechService } from '../../services/speech.service';
 import {DomSanitizer} from '@angular/platform-browser';
 import { Subscription } from 'rxjs/Subscription';
@@ -29,6 +29,10 @@ export class ReceptionistComponent implements OnInit {
   employeeId:number;
   employeeInfo: any;
   employeeData : any [];
+  @ViewChild("video")
+  public video: ElementRef;
+  @ViewChild("canvas")
+  public canvas: ElementRef;
   employeeEmail : any [];
   showEmployee: boolean;
   voices:any[];
@@ -95,26 +99,34 @@ export class ReceptionistComponent implements OnInit {
     this._listenParsi();
     this._listenErrors();
     this.speech.abort();
-    this.showCam();
+    //this.showCam();
     
 
     // this.speech.startListening();  
   }
+  public ngAfterViewInit() {
+    if(navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+        navigator.mediaDevices.getUserMedia({ video: true }).then(stream => {
+            this.video.nativeElement.src = window.URL.createObjectURL(stream);
+            this.video.nativeElement.play();
+        });
+    }
+}
 
-  private showCam() {
-    let nav = <any>navigator;
+  //private showCam() {
+    //let nav = <any>navigator;
 
-    nav.getUserMedia = nav.getUserMedia || nav.mozGetUsermedia || nav.webkitGetUserMedia;
+    //nav.getUserMedia = nav.getUserMedia || nav.mozGetUsermedia || nav.webkitGetUserMedia;
 
-    nav.getUserMedia(
-      {video: true},
-      (stream) => {
-        let webcamUrl = URL.createObjectURL(stream);
-        this.videosrc = this.sanitizer.bypassSecurityTrustUrl(webcamUrl);
-        this.element.nativeElement.querySelector('video').autoplay = true;
-      },
-      (err) => console.log(err));
-  }
+    //nav.getUserMedia(
+      //{video: true},
+      //(stream) => {
+        //let webcamUrl = URL.createObjectURL(stream);
+        //this.videosrc = this.sanitizer.bypassSecurityTrustUrl(webcamUrl);
+        //this.element.nativeElement.querySelector('video').autoplay = true;
+      //},
+      //(err) => console.log(err));
+  //}
 
   get btnLabel(): string {
     return this.speech.listening ? 'Listening...' : 'Listen';
