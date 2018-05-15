@@ -5,7 +5,7 @@
 </div>
 
 <!--<video [src]="videosrc" ></video>-->
-<video #video id="video" width="640" height="480" autoplay></video>
+<video #video id="video" style="width:500px;height:500px;margin-right:15px;margin-left:15px;float:left;" width="400" height="480" autoplay></video>
 
 
 <!-- <div class="row mb-3">
@@ -36,8 +36,7 @@
   </div>
 </div>
 
-<div class="container" [hidden] = "showEmployee">
-      <div>
+<div class="container" [hidden] = "showEmployee" style="float:right; margin-top:40px;">
         <h1>The employees with similar names are:</h1><br>
         <table class="table table-responsive table-striped table-bordered">
           <tr><td><h2>EmployeeId</h2></td> <td><h2>FirstName</h2></td> <td><h2>LastName</h2></td></tr>
@@ -45,10 +44,8 @@
               <td><h4>{{employee.id}}</h4></td> <td><h4>{{employee.firstName}}</h4></td> <td><h4>{{employee.lastName}}</h4></td>       
           </tr>
         </table>
+        </div>
 
         <div>
           <h2><i>{{employeeInfo.email}}</i></h2>
         </div>
-
-      </div>
-    </div>
