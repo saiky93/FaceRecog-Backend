@@ -8,6 +8,7 @@ import 'rxjs/add/operator/filter';
 import 'rxjs/add/operator/map';
 import {Company} from '../../model/Company';
 import { IWindow } from './custom.window';
+import * as fr from 'face-recognition';
 
 @Component({
   selector: 'app-receptionist',
@@ -44,6 +45,7 @@ export class ReceptionistComponent implements OnInit {
     this.employeeInfo={
       email:''
     };
+  
 
     this.showEmployee=true;
 
