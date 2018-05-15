@@ -29,6 +29,7 @@ export class ReceptionistComponent implements OnInit {
   errorMsg:string;
   employeeId:number;
   employeeInfo: any;
+  captures: any[];
   employeeData : any [];
   @ViewChild("video")
   public video: ElementRef;
@@ -40,12 +41,14 @@ export class ReceptionistComponent implements OnInit {
   timer;
   public videosrc : any;
   abc;
+  hide:boolean;
 
   constructor(public speech: SpeechService, public employeeService: EmployeeService,private sanitizer:DomSanitizer, private element:ElementRef) {
     this.employeeInfo={
       email:''
     };
-  
+    this.hide=true;
+    this.captures=[];
 
     this.showEmployee=true;
 
@@ -81,8 +84,11 @@ export class ReceptionistComponent implements OnInit {
      console.log(this.voices);
      this.say("");//this will pre set say() function to be used later on
      clearInterval(this.timer);
-     this.speech.abort();
+     this.speech.abort();//THE say command below shall be moved to face detection function.
      this.say("welcome to Macrosoft. How May I help you? If you want me to call an employee, say employee followed by their first name or last name")
+     setInterval(()=>{
+      this.capture();
+     },2000);
     //  setTimeout((
     //  )=>{
     //    this.speech.startListening();
@@ -248,5 +254,12 @@ export class ReceptionistComponent implements OnInit {
 
     })
   }
+
+  public capture() {
+    var context = this.canvas.nativeElement.getContext("2d").drawImage(this.video.nativeElement, 0, 0, 640, 480);
+    this.captures.push(this.canvas.nativeElement.toDataURL("image/png"));
+    document.getElementById("canvas").style.display="none";
+    console.log(this.captures);
+}
 
 }
