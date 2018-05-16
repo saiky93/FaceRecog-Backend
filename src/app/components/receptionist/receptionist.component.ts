@@ -8,6 +8,12 @@ import 'rxjs/add/operator/filter';
 import 'rxjs/add/operator/map';
 import {Company} from '../../model/Company';
 import { IWindow } from './custom.window';
+import 'tracking/build/tracking';
+import 'tracking/build/data/face';
+
+const global = <any>window;
+declare var window: any;
+declare var tracking: any;
 
 @Component({
   selector: 'app-receptionist',
@@ -15,7 +21,7 @@ import { IWindow } from './custom.window';
   styleUrls: ['./receptionist.component.css']
 })
 export class ReceptionistComponent implements OnInit {
-
+  tracker:any;
   emps: string[];
   emps1: string[];
   end: string[];
@@ -46,6 +52,12 @@ export class ReceptionistComponent implements OnInit {
     this.employeeInfo={
       email:''
     };
+    
+   
+
+    console.log(this.tracker);
+    
+
     this.hide=true;
     this.captures=[];
 
@@ -85,9 +97,7 @@ export class ReceptionistComponent implements OnInit {
      clearInterval(this.timer);
      this.speech.abort();//THE say command below shall be moved to face detection function.
      this.say("welcome to Macrosoft. How May I help you? If you want me to call an employee, say employee followed by their first name or last name")
-     setInterval(()=>{
-      this.capture();
-     },2000);
+     
     //  setTimeout((
     //  )=>{
     //    this.speech.startListening();
@@ -118,7 +128,36 @@ export class ReceptionistComponent implements OnInit {
             this.video.nativeElement.play();
         });
     }
+    this.faceTrack();
 }
+
+faceTrack()
+{
+  var tracker = new tracking.ObjectTracker('face');
+  tracker.setInitialScale(4);
+  tracker.setStepSize(2);
+  tracker.setEdgesDensity(0.1);
+
+  var task = tracking.track(this.video.nativeElement, tracker,{camera:true});
+
+  tracker.on('track', function(event) {
+              var video = <HTMLCanvasElement>document.getElementById('video');
+              var canvas =  <HTMLCanvasElement> document.getElementById('canvas');
+              var context = canvas.getContext('2d');
+              var snapshot = <HTMLCanvasElement> document.getElementById('snapshotCanvas');
+              var snapshotContext = snapshot.getContext('2d');
+              snapshotContext.drawImage(video, 0, 0, video.width, video.height);  
+              var dataURI = snapshot.toDataURL('image/jpeg');    
+              context.clearRect(0, 0, canvas.width, canvas.height);     
+               event.data.forEach(function(rect) {
+                 context.strokeStyle = '#a64ceb';
+                 context.strokeRect(rect.x, rect.y, rect.width, rect.height);
+                 context.font = '11px Helvetica';
+                 context.fillStyle = "#fff";
+              });              
+     });
+}
+
 
   //private showCam() {
     //let nav = <any>navigator;
@@ -253,12 +292,4 @@ export class ReceptionistComponent implements OnInit {
 
     })
   }
-
-  public capture() {
-    var context = this.canvas.nativeElement.getContext("2d").drawImage(this.video.nativeElement, 0, 0, 640, 480);
-    this.captures.push(this.canvas.nativeElement.toDataURL("image/png"));
-    document.getElementById("canvas").style.display="none";
-    console.log(this.captures);
-}
-
 }
