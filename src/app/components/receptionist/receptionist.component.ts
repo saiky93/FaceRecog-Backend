@@ -1,14 +1,16 @@
 import { Component, OnInit, ElementRef, ViewChild } from '@angular/core';
 import { SpeechService } from '../../services/speech.service';
+import { WeatherService } from '../../services/weather.service';
 import {DomSanitizer} from '@angular/platform-browser';
 import { Subscription } from 'rxjs/Subscription';
 import { EmployeeService} from '../../services/employee.service';
+import {Http, Response, URLSearchParams} from '@angular/http'
 import {WebCamComponent } from 'ng2-webcam';
+import { HttpClientModule } from '@angular/common/http'
 import 'rxjs/add/operator/filter';
 import 'rxjs/add/operator/map';
 import {Company} from '../../model/Company';
 import { IWindow } from './custom.window';
-import * as fr from 'face-recognition';
 
 @Component({
   selector: 'app-receptionist',
@@ -20,7 +22,7 @@ export class ReceptionistComponent implements OnInit {
   emps: string[];
   emps1: string[];
   end: string[];
-  parsi: string[];
+  parsippany: string[];
   empsSub: Subscription;
   emp1Sub: Subscription;
   endSub: Subscription;
@@ -42,12 +44,12 @@ export class ReceptionistComponent implements OnInit {
   public videosrc : any;
   abc;
   hide:boolean;
-
-  constructor(public speech: SpeechService, public employeeService: EmployeeService,private sanitizer:DomSanitizer, private element:ElementRef) {
+weatherString:string;
+  constructor(public speech: SpeechService, public weather: WeatherService,public employeeService: EmployeeService,private sanitizer:DomSanitizer, private element:ElementRef) {
     this.employeeInfo={
       email:''
     };
-    this.hide=true;
+   this.hide=true;
     this.captures=[];
 
     this.showEmployee=true;
@@ -85,15 +87,7 @@ export class ReceptionistComponent implements OnInit {
      this.say("");//this will pre set say() function to be used later on
      clearInterval(this.timer);
      this.speech.abort();//THE say command below shall be moved to face detection function.
-     this.say("welcome to Macrosoft. How May I help you? If you want me to call an employee, say employee followed by their first name or last name")
-     setInterval(()=>{
-      this.capture();
-     },2000);
-    //  setTimeout((
-    //  )=>{
-    //    this.speech.startListening();
-       
-    //  },10000);
+     this.say("welcome to Macrosoft. How May I help you? If you want me to call an employee, say employee followed by their first name or last name");
    }
    
  }
@@ -104,7 +98,7 @@ export class ReceptionistComponent implements OnInit {
     this._listenEmps();
     this._listenEmps1();
     this._listenEnd();
-    this._listenParsi();
+    this._listenParsippany();
     this._listenErrors();
     this.speech.abort();
     //this.showCam();
@@ -139,8 +133,6 @@ export class ReceptionistComponent implements OnInit {
   get btnLabel(): string {
     return this.speech.listening ? 'Listening...' : 'Listen';
   }
-
-  
   
   private _listenEmps(){
     this.empsSub = this.speech.words$
@@ -167,6 +159,27 @@ export class ReceptionistComponent implements OnInit {
           
         }
       );
+  }
+
+  private _listenParsippany() {
+    this.parsiSub = this.speech.words$
+    .filter(obj => obj.type == 'parsippany')
+    .map(emp1Obj => emp1Obj.word)
+    .subscribe(
+      parsippany => {
+        this._setError();
+        console.log('parsi', parsippany);
+        this.weather.parsiweather().
+        subscribe((res: Response) => {
+          var weatherData = res.json();
+          var conditons = weatherData.weather[0].description;
+          var temperature = weatherData.main.temp;
+          this.weatherString="It is currently "+conditons+" with a temperature of"+temperature+" degree celcius.";
+          this.say(this.weatherString);
+        });
+   
+      }
+    );
   }
 
   private _listenEmps1() {
@@ -202,18 +215,6 @@ export class ReceptionistComponent implements OnInit {
     );
   }
 
-  private _listenParsi() {
-    this.parsiSub = this.speech.words$
-    .filter(obj => obj.type == 'parsi')
-    .map(emp1Obj => emp1Obj.word)
-    .subscribe(
-      parsi => {
-        this._setError();
-        console.log('parsi', parsi);
-      }
-    );
-  }
-
   private _listenErrors() {
     this.errorsSub = this.speech.errors$
       .subscribe(err => this._setError(err));
@@ -245,6 +246,12 @@ export class ReceptionistComponent implements OnInit {
     });
 
   }
+
+  // parsiweather(){
+  //   return this.http.get('api.openweathermap.org/data/2.5/weather?q=Parsippany&APPID=77551c1e6cafce85e4831a926629c894').subscribe((data)=>{
+  //     this.parsiweather = data;
+  //   });
+  // }
 
   showEmployeeInfo(employeeId){
     this.employeeService.getEmployeeEmail(employeeId).subscribe((data)=>{
