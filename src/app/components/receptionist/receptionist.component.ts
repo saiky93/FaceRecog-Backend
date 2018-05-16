@@ -8,7 +8,6 @@ import 'rxjs/add/operator/filter';
 import 'rxjs/add/operator/map';
 import {Company} from '../../model/Company';
 import { IWindow } from './custom.window';
-import * as fr from 'face-recognition';
 
 @Component({
   selector: 'app-receptionist',
@@ -42,7 +41,7 @@ export class ReceptionistComponent implements OnInit {
   public videosrc : any;
   abc;
   hide:boolean;
-
+ detector:any;
   constructor(public speech: SpeechService, public employeeService: EmployeeService,private sanitizer:DomSanitizer, private element:ElementRef) {
     this.employeeInfo={
       email:''
