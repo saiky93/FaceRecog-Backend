@@ -33,14 +33,14 @@ init(){
     'inform :emp1': (emp1) => {
       this.zone.run(() => {
         this.words$.next({type: 'emp1', 'word': emp1});
-        console.log("emp1");
+        console.log("emp1 "+ emp1);
       });
     },
 
     'weather :parsippany': (parsippany) => {
       this.zone.run(() => {
         this.words$.next({type: 'parsippany', 'word': parsippany});
-        console.log("parsi");
+        console.log("parsi "+ parsippany);
       });
     }
   };
