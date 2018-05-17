@@ -1,16 +1,19 @@
 import { Component, OnInit, ElementRef, ViewChild } from '@angular/core';
 import { SpeechService } from '../../services/speech.service';
-import { WeatherService } from '../../services/weather.service';
 import {DomSanitizer} from '@angular/platform-browser';
 import { Subscription } from 'rxjs/Subscription';
 import { EmployeeService} from '../../services/employee.service';
-import {Http, Response, URLSearchParams} from '@angular/http'
 import {WebCamComponent } from 'ng2-webcam';
-import { HttpClientModule } from '@angular/common/http'
 import 'rxjs/add/operator/filter';
 import 'rxjs/add/operator/map';
 import {Company} from '../../model/Company';
 import { IWindow } from './custom.window';
+import 'tracking/build/tracking';
+import 'tracking/build/data/face';
+
+const global = <any>window;
+declare var window: any;
+declare var tracking: any;
 
 @Component({
   selector: 'app-receptionist',
@@ -18,11 +21,11 @@ import { IWindow } from './custom.window';
   styleUrls: ['./receptionist.component.css']
 })
 export class ReceptionistComponent implements OnInit {
-
+  tracker:any;
   emps: string[];
   emps1: string[];
   end: string[];
-  parsippany: string[];
+  parsi: string[];
   empsSub: Subscription;
   emp1Sub: Subscription;
   endSub: Subscription;
@@ -44,12 +47,18 @@ export class ReceptionistComponent implements OnInit {
   public videosrc : any;
   abc;
   hide:boolean;
-weatherString:string;
-  constructor(public speech: SpeechService, public weather: WeatherService,public employeeService: EmployeeService,private sanitizer:DomSanitizer, private element:ElementRef) {
+ detector:any;
+  constructor(public speech: SpeechService, public employeeService: EmployeeService,private sanitizer:DomSanitizer, private element:ElementRef) {
     this.employeeInfo={
       email:''
     };
-   this.hide=true;
+    
+   
+
+    console.log(this.tracker);
+    
+
+    this.hide=true;
     this.captures=[];
 
     this.showEmployee=true;
@@ -87,7 +96,8 @@ weatherString:string;
      this.say("");//this will pre set say() function to be used later on
      clearInterval(this.timer);
      this.speech.abort();//THE say command below shall be moved to face detection function.
-     this.say("welcome to Macrosoft. How May I help you? If you want me to call an employee, say employee followed by their first name or last name");
+     this.say("welcome to Macrosoft. How May I help you? If you want me to call an employee, say employee followed by their first name or last name")
+     this.speech.startListening();
    }
    
  }
@@ -98,41 +108,49 @@ weatherString:string;
     this._listenEmps();
     this._listenEmps1();
     this._listenEnd();
-    this._listenParsippany();
+    this._listenParsi();
     this._listenErrors();
     this.speech.abort();
-    //this.showCam();
-    
 
-    // this.speech.startListening();  
   }
   public ngAfterViewInit() {
-    if(navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
-        navigator.mediaDevices.getUserMedia({ video: true }).then(stream => {
-            this.video.nativeElement.src = window.URL.createObjectURL(stream);
-            this.video.nativeElement.play();
-        });
-    }
+    this.faceTrack();
 }
 
-  //private showCam() {
-    //let nav = <any>navigator;
+faceTrack()
+{
+  var tracker = new tracking.ObjectTracker('face');
+  tracker.setInitialScale(4);
+  tracker.setStepSize(2);
+  tracker.setEdgesDensity(0.1);
 
-    //nav.getUserMedia = nav.getUserMedia || nav.mozGetUsermedia || nav.webkitGetUserMedia;
+  var task = tracking.track(this.video.nativeElement, tracker,{camera:true});
 
-    //nav.getUserMedia(
-      //{video: true},
-      //(stream) => {
-        //let webcamUrl = URL.createObjectURL(stream);
-        //this.videosrc = this.sanitizer.bypassSecurityTrustUrl(webcamUrl);
-        //this.element.nativeElement.querySelector('video').autoplay = true;
-      //},
-      //(err) => console.log(err));
-  //}
+  tracker.on('track', function(event) {
+              var video = <HTMLCanvasElement>document.getElementById('video');
+              var canvas =  <HTMLCanvasElement> document.getElementById('canvas');
+              var context = canvas.getContext('2d');
+              var snapshot = <HTMLCanvasElement> document.getElementById('snapshotCanvas');
+              var snapshotContext = snapshot.getContext('2d');
+              snapshotContext.drawImage(video, 0, 0, video.width, video.height);  
+              var dataURI = snapshot.toDataURL('image/jpeg');    
+              context.clearRect(0, 0, canvas.width, canvas.height);     
+               event.data.forEach(function(rect) {
+                 context.strokeStyle = '#a64ceb';
+                 context.strokeRect(rect.x, rect.y, rect.width, rect.height);
+                 context.font = '11px Helvetica';
+                 context.fillStyle = "#fff";
+              });              
+     });
+}
+
+
 
   get btnLabel(): string {
     return this.speech.listening ? 'Listening...' : 'Listen';
   }
+
+  
   
   private _listenEmps(){
     this.empsSub = this.speech.words$
@@ -150,37 +168,10 @@ weatherString:string;
           this.say("The employees that I can find with similar names in the system are shown on the window.");
           this.say("If you did not find the employee that you are looking for in the table, say employee followed by their first name or last name.");
           this.say("if you found the employee that you are looking for in the table, say inform followed by their employee id displayed in the table.")
-          // setTimeout((
-          // )=>{
-          //   this.speech.startListening();
-            
-          // },22000);
-          // this.showEmployeeEmail(emps);
+          this.speech.startListening();
           
         }
       );
-  }
-
-  private _listenParsippany() {
-    this.parsiSub = this.speech.words$
-    .filter(obj => obj.type == 'parsippany')
-    .map(emp1Obj => emp1Obj.word)
-    .subscribe(
-      parsippany => {
-        this._setError();
-        console.log('parsi', parsippany);
-        this.weather.parsiweather().
-        subscribe((res: Response) => {
-          var weatherData = res.json();
-          var conditons = weatherData.weather[0].description;
-          var temperature = weatherData.main.temp;
-          this.weatherString="It is currently "+conditons+" with a temperature of "+temperature+" degree fahrenheit.";
-          this.say(this.weatherString);
-          console.log(this.weatherString);
-        });
-   
-      }
-    );
   }
 
   private _listenEmps1() {
@@ -195,11 +186,7 @@ weatherString:string;
         this.speech.abort();
         this.say("I have informed to the employee and he will be there with you shortly.");
         this.say("thank you for coming to macrosoft and have a nice day.");
-        // setTimeout((
-        // )=>{
-        //   this.speech.startListening();
-          
-        // },13000);
+        this.speech.startListening();
       }
     );
   }
@@ -212,6 +199,18 @@ weatherString:string;
       end => {
         this._setError();
         console.log('end', end);
+      }
+    );
+  }
+
+  private _listenParsi() {
+    this.parsiSub = this.speech.words$
+    .filter(obj => obj.type == 'parsi')
+    .map(emp1Obj => emp1Obj.word)
+    .subscribe(
+      parsi => {
+        this._setError();
+        console.log('parsi', parsi);
       }
     );
   }
@@ -248,12 +247,6 @@ weatherString:string;
 
   }
 
-  // parsiweather(){
-  //   return this.http.get('api.openweathermap.org/data/2.5/weather?q=Parsippany&APPID=77551c1e6cafce85e4831a926629c894').subscribe((data)=>{
-  //     this.parsiweather = data;
-  //   });
-  // }
-
   showEmployeeInfo(employeeId){
     this.employeeService.getEmployeeEmail(employeeId).subscribe((data)=>{
       console.log(data);
@@ -262,12 +255,4 @@ weatherString:string;
 
     })
   }
-
-  public capture() {
-    var context = this.canvas.nativeElement.getContext("2d").drawImage(this.video.nativeElement, 0, 0, 640, 480);
-    this.captures.push(this.canvas.nativeElement.toDataURL("image/png"));
-    document.getElementById("canvas").style.display="none";
-    console.log(this.captures);
-}
-
 }

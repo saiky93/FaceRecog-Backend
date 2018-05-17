@@ -4,30 +4,12 @@
   <h1 class="text-center"><marquee><i>Front Desk Receptionist</i></marquee></h1>
 </div>
 
-<!--<video [src]="videosrc" ></video>-->
-<video #video id="video" style="width:500px;height:500px;margin-right:15px;margin-left:15px;float:left;" width="400" height="480" autoplay></video>
+<div class="canvasContainer">
+<canvas #snapshotCanvas id="snapshotCanvas" width="320" height="240"></canvas>
+<video #video id="video" width="320" height="240" autoplay muted></video>
+<canvas #canvas id="canvas" width="320" height="240"></canvas>
+</div>
 
-
-
-<!-- <div class="row mb-3">
-  <div class="col btn-group">
-    <button
-      class="btn btn-primary col-6"
-      (click)="speech.startListening()"
-      [disabled]="speech.listening">
-        {{btnLabel}}
-    </button>
-
-    
-
-    <button
-      class="btn btn-danger col-6"
-      (click)="speech.abort()"
-      [disabled]="!speech.listening">
-        Stop
-    </button>
-  </div>
-</div> -->
 
 <div class="row" *ngIf="errorMsg">
   <div class="col">
@@ -50,5 +32,3 @@
         <div style="float:right; margin-top:40px;">
           <h2><i>{{employeeInfo.email}}</i></h2>
         </div>
-        <canvas #canvas id="canvas" width="640" height="480"></canvas>
-        <!--<div><button id="snap" (click)="capture()">Snap Photo</button></div>-->

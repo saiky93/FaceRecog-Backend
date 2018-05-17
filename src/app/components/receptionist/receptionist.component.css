@@ -1,0 +1,9 @@
+    
+video, canvas {
+    margin-left: 9%;
+    position: absolute;
+}
+
+.canvasContainer {
+    float: left;
+}
