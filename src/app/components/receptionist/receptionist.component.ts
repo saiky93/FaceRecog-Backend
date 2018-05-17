@@ -97,7 +97,7 @@ export class ReceptionistComponent implements OnInit {
      clearInterval(this.timer);
      this.speech.abort();//THE say command below shall be moved to face detection function.
      this.say("welcome to Macrosoft. How May I help you? If you want me to call an employee, say employee followed by their first name or last name")
-     
+     this.speech.startListening();
     //  setTimeout((
     //  )=>{
     //    this.speech.startListening();
@@ -122,12 +122,12 @@ export class ReceptionistComponent implements OnInit {
     // this.speech.startListening();  
   }
   public ngAfterViewInit() {
-    if(navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
-        navigator.mediaDevices.getUserMedia({ video: true }).then(stream => {
-            this.video.nativeElement.src = window.URL.createObjectURL(stream);
-            this.video.nativeElement.play();
-        });
-    }
+    // if(navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+    //     navigator.mediaDevices.getUserMedia({ video: true }).then(stream => {
+    //         this.video.nativeElement.src = window.URL.createObjectURL(stream);
+    //         this.video.nativeElement.play();
+    //     });
+    // }
     this.faceTrack();
 }
 
@@ -196,6 +196,7 @@ faceTrack()
           this.say("The employees that I can find with similar names in the system are shown on the window.");
           this.say("If you did not find the employee that you are looking for in the table, say employee followed by their first name or last name.");
           this.say("if you found the employee that you are looking for in the table, say inform followed by their employee id displayed in the table.")
+          this.speech.startListening();
           // setTimeout((
           // )=>{
           //   this.speech.startListening();
@@ -219,6 +220,7 @@ faceTrack()
         this.speech.abort();
         this.say("I have informed to the employee and he will be there with you shortly.");
         this.say("thank you for coming to macrosoft and have a nice day.");
+        this.speech.startListening();
         // setTimeout((
         // )=>{
         //   this.speech.startListening();
