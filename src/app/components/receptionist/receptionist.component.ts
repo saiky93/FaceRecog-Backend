@@ -1,5 +1,6 @@
 import { Component, OnInit, ElementRef, ViewChild } from '@angular/core';
 import { SpeechService } from '../../services/speech.service';
+import { WeatherService } from '../../services/weather.service';
 import {DomSanitizer} from '@angular/platform-browser';
 import { Subscription } from 'rxjs/Subscription';
 import { EmployeeService} from '../../services/employee.service';
@@ -25,7 +26,7 @@ export class ReceptionistComponent implements OnInit {
   emps: string[];
   emps1: string[];
   end: string[];
-  parsi: string[];
+  parsippany: string[];
   empsSub: Subscription;
   emp1Sub: Subscription;
   endSub: Subscription;
@@ -47,8 +48,9 @@ export class ReceptionistComponent implements OnInit {
   public videosrc : any;
   abc;
   hide:boolean;
+  weatherString:string;
  detector:any;
-  constructor(public speech: SpeechService, public employeeService: EmployeeService,private sanitizer:DomSanitizer, private element:ElementRef) {
+  constructor(public speech: SpeechService,public weather: WeatherService, public employeeService: EmployeeService, private sanitizer:DomSanitizer, private element:ElementRef) {
     this.employeeInfo={
       email:''
     };
@@ -108,7 +110,7 @@ export class ReceptionistComponent implements OnInit {
     this._listenEmps();
     this._listenEmps1();
     this._listenEnd();
-    this._listenParsi();
+    this._listenParsippany();
     this._listenErrors();
     this.speech.abort();
 
@@ -203,21 +205,33 @@ faceTrack()
     );
   }
 
-  private _listenParsi() {
+  private _listenParsippany() {
     this.parsiSub = this.speech.words$
-    .filter(obj => obj.type == 'parsi')
+    .filter(obj => obj.type == 'parsippany')
     .map(emp1Obj => emp1Obj.word)
     .subscribe(
-      parsi => {
+      parsippany => {
         this._setError();
-        console.log('parsi', parsi);
+        console.log('parsi', parsippany);
+        this.weather.parsiweather().
+        subscribe((res)=>{
+          var weatherData = null;
+          weatherData = res.json();
+          var conditions = weatherData.weather[0].description;
+          var temperature = weatherData.main.temp;
+          this.weatherString = "It is currently "+conditions+" with a temperature of "+temperature+" degree fahrenheit.";
+          this.say(this.weatherString);
+          console.log(this.weatherString);
+        });
       }
     );
+    this.speech.startListening();
   }
 
   private _listenErrors() {
     this.errorsSub = this.speech.errors$
       .subscribe(err => this._setError(err));
+      this.speech.startListening();
   }
 
   private _setError(err?: any) {
