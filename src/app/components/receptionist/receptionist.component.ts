@@ -174,8 +174,9 @@ weatherString:string;
           var weatherData = res.json();
           var conditons = weatherData.weather[0].description;
           var temperature = weatherData.main.temp;
-          this.weatherString="It is currently "+conditons+" with a temperature of"+temperature+" degree celcius.";
+          this.weatherString="It is currently "+conditons+" with a temperature of "+temperature+" degree fahrenheit.";
           this.say(this.weatherString);
+          console.log(this.weatherString);
         });
    
       }
