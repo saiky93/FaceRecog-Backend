@@ -50,11 +50,13 @@ export class ReceptionistComponent implements OnInit {
   hide:boolean;
   weatherString:string;
  detector:any;
+ counter;
+ clock;
   constructor(public speech: SpeechService,public weather: WeatherService, public employeeService: EmployeeService, private sanitizer:DomSanitizer, private element:ElementRef) {
+    this.counter=0;
     this.employeeInfo={
       email:''
     };
-    
    
 
     console.log(this.tracker);
@@ -73,7 +75,12 @@ export class ReceptionistComponent implements OnInit {
       this.getSpeechVoices();
     },200);
 
+
+    this.clock = setInterval(()=>{
+     this.counter = this.counter+1;
+    },1000);
    }
+
 
    say(utterence: string)
    {
@@ -84,7 +91,6 @@ export class ReceptionistComponent implements OnInit {
     (<any>window).speechSynthesis.speak(voiceGreeting);
     voiceGreeting.onend = function()
     {
-      abc.abort();
       abc.startListening();
     }
    }
@@ -97,9 +103,9 @@ export class ReceptionistComponent implements OnInit {
      console.log(this.voices);
      this.say("");//this will pre set say() function to be used later on
      clearInterval(this.timer);
-     this.speech.abort();//THE say command below shall be moved to face detection function.
-     this.say("welcome to Macrosoft. How May I help you? If you want me to call an employee, say employee followed by their first name or last name")
-     this.speech.startListening();
+    //  this.speech.abort();//THE say command below shall be moved to face detection function.
+    // //  this.say("Welcome to Macrosoft. How May I help you? If you want me to call an employee, say employee followed by their first name or last name")
+    //  this.speech.startListening();
    }
    
  }
@@ -116,19 +122,37 @@ export class ReceptionistComponent implements OnInit {
 
   }
   public ngAfterViewInit() {
-    this.faceTrack();
+    setTimeout(()=>{
+      this.faceTrack();
+
+    },1000)
 }
 
 faceTrack()
 {
+  var ghadi=0;
+  var clock = setInterval(()=>{
+    ghadi=this.counter;
+    if(ghadi==10)
+    {
+      this.counter=0;
+    }
+  },1000);
   var tracker = new tracking.ObjectTracker('face');
   tracker.setInitialScale(4);
   tracker.setStepSize(2);
   tracker.setEdgesDensity(0.1);
-
+  var isVisitorWelcomed=0;   
   var task = tracking.track(this.video.nativeElement, tracker,{camera:true});
-
+  var speechRecogVariable = this.speech;
+  var speechSynVariable = new SpeechSynthesisUtterance("Welcome to Macrosoft. How May I help you? If you want me to call an employee, say employee followed by their first name or last name");
+  speechSynVariable.voice=this.voices.filter(function(voice) { return voice.name == "Google UK English Female"; })[0];
   tracker.on('track', function(event) {
+    if(event.data.length===0 && ghadi==10)
+    {
+      isVisitorWelcomed=0;
+      ghadi=0;
+    }
               var video = <HTMLCanvasElement>document.getElementById('video');
               var canvas =  <HTMLCanvasElement> document.getElementById('canvas');
               var context = canvas.getContext('2d');
@@ -136,13 +160,27 @@ faceTrack()
               var snapshotContext = snapshot.getContext('2d');
               snapshotContext.drawImage(video, 0, 0, video.width, video.height);  
               var dataURI = snapshot.toDataURL('image/jpeg');    
-              context.clearRect(0, 0, canvas.width, canvas.height);     
+              context.clearRect(0, 0, canvas.width, canvas.height); 
+              
+              console.log(isVisitorWelcomed);
                event.data.forEach(function(rect) {
                  context.strokeStyle = '#a64ceb';
                  context.strokeRect(rect.x, rect.y, rect.width, rect.height);
                  context.font = '11px Helvetica';
                  context.fillStyle = "#fff";
-              });              
+                 if(isVisitorWelcomed==0)
+                 {
+                  (<any>window).speechSynthesis.speak(speechSynVariable);
+                  isVisitorWelcomed= isVisitorWelcomed+1;
+                  speechSynVariable.onend = function()
+                  {
+                    speechRecogVariable.startListening();
+
+                  }
+                  
+                 }
+              }); 
+              
      });
 }
 
@@ -166,10 +204,10 @@ faceTrack()
           //if he says 1.This variable will be initialized with id said by user
           var employeeIdFromSpeech;
           
-          this.speech.abort();
-          this.say("The employees that I can find with similar names in the system are shown on the window.");
-          this.say("If you did not find the employee that you are looking for in the table, say employee followed by their first name or last name.");
-          this.say("if you found the employee that you are looking for in the table, say inform followed by their employee id displayed in the table.")
+          // this.speech.abort();
+          this.say("Here are the employees i found having similar names. To inform an employee, say inform followed by their employee i d. If the employee you are looking for is not shown, please say employee followed by their first name or last name.");
+          // this.say("If you did not find the employee that you are looking for in the table, say employee followed by their first name or last name.");
+          // this.say("if you found the employee that you are looking for in the table, say inform followed by their employee id displayed in the table.")
           this.speech.startListening();
           
         }
@@ -185,9 +223,9 @@ faceTrack()
         this._setError();
         console.log('emp1', emp1);
         this.showEmployeeInfo(emp1);
-        this.speech.abort();
-        this.say("I have informed to the employee and he will be there with you shortly.");
-        this.say("thank you for coming to macrosoft and have a nice day.");
+        // this.speech.abort();
+        this.say("I have informed to the employee and he will be there with you shortly. Thank you for coming to macrosoft and have a nice day.");
+        //this.say("Thank you for coming to macrosoft and have a nice day.");
         this.speech.startListening();
       }
     );
