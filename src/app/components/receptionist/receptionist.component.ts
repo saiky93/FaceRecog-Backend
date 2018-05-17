@@ -98,11 +98,6 @@ export class ReceptionistComponent implements OnInit {
      this.speech.abort();//THE say command below shall be moved to face detection function.
      this.say("welcome to Macrosoft. How May I help you? If you want me to call an employee, say employee followed by their first name or last name")
      this.speech.startListening();
-    //  setTimeout((
-    //  )=>{
-    //    this.speech.startListening();
-       
-    //  },10000);
    }
    
  }
@@ -116,18 +111,9 @@ export class ReceptionistComponent implements OnInit {
     this._listenParsi();
     this._listenErrors();
     this.speech.abort();
-    //this.showCam();
-    
 
-    // this.speech.startListening();  
   }
   public ngAfterViewInit() {
-    // if(navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
-    //     navigator.mediaDevices.getUserMedia({ video: true }).then(stream => {
-    //         this.video.nativeElement.src = window.URL.createObjectURL(stream);
-    //         this.video.nativeElement.play();
-    //     });
-    // }
     this.faceTrack();
 }
 
@@ -159,20 +145,6 @@ faceTrack()
 }
 
 
-  //private showCam() {
-    //let nav = <any>navigator;
-
-    //nav.getUserMedia = nav.getUserMedia || nav.mozGetUsermedia || nav.webkitGetUserMedia;
-
-    //nav.getUserMedia(
-      //{video: true},
-      //(stream) => {
-        //let webcamUrl = URL.createObjectURL(stream);
-        //this.videosrc = this.sanitizer.bypassSecurityTrustUrl(webcamUrl);
-        //this.element.nativeElement.querySelector('video').autoplay = true;
-      //},
-      //(err) => console.log(err));
-  //}
 
   get btnLabel(): string {
     return this.speech.listening ? 'Listening...' : 'Listen';
@@ -197,12 +169,6 @@ faceTrack()
           this.say("If you did not find the employee that you are looking for in the table, say employee followed by their first name or last name.");
           this.say("if you found the employee that you are looking for in the table, say inform followed by their employee id displayed in the table.")
           this.speech.startListening();
-          // setTimeout((
-          // )=>{
-          //   this.speech.startListening();
-            
-          // },22000);
-          // this.showEmployeeEmail(emps);
           
         }
       );
@@ -221,11 +187,6 @@ faceTrack()
         this.say("I have informed to the employee and he will be there with you shortly.");
         this.say("thank you for coming to macrosoft and have a nice day.");
         this.speech.startListening();
-        // setTimeout((
-        // )=>{
-        //   this.speech.startListening();
-          
-        // },13000);
       }
     );
   }

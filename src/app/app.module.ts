@@ -38,6 +38,7 @@ import { AuthenticationService } from './services/authentication.service';
 import { TrainingService} from './services/training.service';
 import { AuthGuardCompany } from './guards/auth.guard.company';
 import { SpeechService } from './services/speech.service';
+import { WeatherService } from './services/weather.service';
 import { AuthGuardEmployee } from './guards/auth.guard.employee';
 import { UploadCsvComponent } from './components/upload-csv/upload-csv.component';
 import { TakepicturesComponent } from './components/takepictures/takepictures.component';
@@ -95,7 +96,7 @@ const appRoutes: Routes = [
     RouterModule.forRoot(appRoutes)
 
   ],
-  providers: [TrainingService,{ provide: 'SPEECH_LANG', useValue: 'en-US' },CompanyService,SpeechService,EmployeeService,IsEmailExistsService,DataService,AuthGuardCompany,AuthGuardEmployee,AuthenticationService,CompanyProfileService,AddEmployeeService],
+  providers: [TrainingService,{ provide: 'SPEECH_LANG', useValue: 'en-US' },CompanyService,WeatherService,SpeechService,EmployeeService,IsEmailExistsService,DataService,AuthGuardCompany,AuthGuardEmployee,AuthenticationService,CompanyProfileService,AddEmployeeService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
