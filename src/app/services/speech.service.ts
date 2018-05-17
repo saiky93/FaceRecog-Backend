@@ -36,7 +36,7 @@ init(){
         console.log("emp1 "+ emp1);
       });
     },
-
+    
     'weather :parsippany': (parsippany) => {
       this.zone.run(() => {
         this.words$.next({type: 'parsippany', 'word': parsippany});
