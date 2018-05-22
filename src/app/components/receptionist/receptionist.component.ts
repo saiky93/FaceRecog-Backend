@@ -151,6 +151,8 @@ faceTrack()
   var imgser = this.train;
   var task = tracking.track(this.video.nativeElement, tracker,{camera:true});
   var speechRecogVariable = this.speech;
+  var empspeech = new SpeechSynthesisUtterance("Welcome to Macrosoft. How may I help you? Do you want to know about Parsippany weather? if yes say weather parsippany.")
+  empspeech.voice=this.voices.filter(function(voice) { return voice.name == "Google UK English Female"; })[0];
   var speechSynVariable = new SpeechSynthesisUtterance("Welcome to Macrosoft. How May I help you? If you want me to call an employee, say employee followed by their first name or last name");
   speechSynVariable.voice=this.voices.filter(function(voice) { return voice.name == "Google UK English Female"; })[0];
   tracker.on('track', function(event) {
@@ -180,18 +182,36 @@ faceTrack()
                   // setInterval(()=>{
                     imgser.prediction(dataURI).subscribe((data)=>{
                       console.log(data.json());
-                    });
-
-                  //   console.log("bhamchika");
-                  // },60000);
+                      var imgback = data.json();
+                      if(imgback.employeeId==-1){
+                        (<any>window).speechSynthesis.speak(speechSynVariable);
                   
-                  (<any>window).speechSynthesis.speak(speechSynVariable);
-                  isVisitorWelcomed= isVisitorWelcomed+1;
                   speechSynVariable.onend = function()
                   {
                     speechRecogVariable.startListening();
 
                   }
+                      }else{
+                        // as of now keep this
+                        (<any>window).speechSynthesis.speak(empspeech);
+                  
+                  empspeech.onend = function()
+                  {
+                    speechRecogVariable.startListening();
+
+                  }
+                      }
+                    });
+
+                  //   console.log("bhamchika");
+                  // },60000);
+                  // (<any>window).speechSynthesis.speak(speechSynVariable);
+                  isVisitorWelcomed= isVisitorWelcomed+1;
+                  // speechSynVariable.onend = function()
+                  // {
+                  //   speechRecogVariable.startListening();
+
+                  // }
                   
                  }
               }); 
