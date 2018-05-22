@@ -1,6 +1,7 @@
 import { Component, OnInit, ElementRef, ViewChild } from '@angular/core';
 import { SpeechService } from '../../services/speech.service';
 import { WeatherService } from '../../services/weather.service';
+import { TrainingService } from '../../services/training.service';
 import {DomSanitizer} from '@angular/platform-browser';
 import { Subscription } from 'rxjs/Subscription';
 import { EmployeeService} from '../../services/employee.service';
@@ -36,6 +37,7 @@ export class ReceptionistComponent implements OnInit {
   employeeId:number;
   employeeInfo: any;
   captures: any[];
+  trackIn:any;
   employeeData : any [];
   @ViewChild("video")
   public video: ElementRef;
@@ -46,13 +48,15 @@ export class ReceptionistComponent implements OnInit {
   voices:any[];
   timer;
   public videosrc : any;
+  FaceRecognitionBackend = "http://localhost:5000/";
   abc;
   hide:boolean;
   weatherString:string;
  detector:any;
+ sendPhotoForFaceRecognition:any;
  counter;
  clock;
-  constructor(public speech: SpeechService,public weather: WeatherService, public employeeService: EmployeeService, private sanitizer:DomSanitizer, private element:ElementRef) {
+  constructor(public speech: SpeechService,public weather: WeatherService,public train: TrainingService, public employeeService: EmployeeService, private sanitizer:DomSanitizer, private element:ElementRef) {
     this.counter=0;
     this.employeeInfo={
       email:''
@@ -74,7 +78,6 @@ export class ReceptionistComponent implements OnInit {
     this.timer = setInterval(()=>{
       this.getSpeechVoices();
     },200);
-
 
     this.clock = setInterval(()=>{
      this.counter = this.counter+1;
@@ -142,7 +145,10 @@ faceTrack()
   tracker.setInitialScale(4);
   tracker.setStepSize(2);
   tracker.setEdgesDensity(0.1);
-  var isVisitorWelcomed=0;   
+  var isVisitorWelcomed=0;
+  
+
+  var imgser = this.train;
   var task = tracking.track(this.video.nativeElement, tracker,{camera:true});
   var speechRecogVariable = this.speech;
   var speechSynVariable = new SpeechSynthesisUtterance("Welcome to Macrosoft. How May I help you? If you want me to call an employee, say employee followed by their first name or last name");
@@ -158,6 +164,7 @@ faceTrack()
               var context = canvas.getContext('2d');
               var snapshot = <HTMLCanvasElement> document.getElementById('snapshotCanvas');
               var snapshotContext = snapshot.getContext('2d');
+              var trackimg = this.trackInfo;
               snapshotContext.drawImage(video, 0, 0, video.width, video.height);  
               var dataURI = snapshot.toDataURL('image/jpeg');    
               context.clearRect(0, 0, canvas.width, canvas.height); 
@@ -170,6 +177,14 @@ faceTrack()
                  context.fillStyle = "#fff";
                  if(isVisitorWelcomed==0)
                  {
+                  // setInterval(()=>{
+                    imgser.prediction(dataURI).subscribe((data)=>{
+                      console.log(data.json());
+                    });
+
+                  //   console.log("bhamchika");
+                  // },60000);
+                  
                   (<any>window).speechSynthesis.speak(speechSynVariable);
                   isVisitorWelcomed= isVisitorWelcomed+1;
                   speechSynVariable.onend = function()
@@ -305,6 +320,13 @@ faceTrack()
       this.employeeInfo = data;
       this.showEmployee = true;
 
-    })
+    });
+  }
+
+  showEmployeeFromTracking(dataURI){
+    this.train.prediction(dataURI).subscribe((eid)=>{
+      console.log(eid);
+      this.trackIn = eid;
+    });
   }
 }
