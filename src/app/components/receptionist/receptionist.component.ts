@@ -52,12 +52,15 @@ export class ReceptionistComponent implements OnInit {
   abc;
   hide:boolean;
   weatherString:string;
- detector:any;
- sendPhotoForFaceRecognition:any;
- counter;
- clock;
+  detector:any;
+  sendPhotoForFaceRecognition:any;
+  counter;
+  clock;
+  counter1;
+  clock1;
   constructor(public speech: SpeechService,public weather: WeatherService,public train: TrainingService, public employeeService: EmployeeService, private sanitizer:DomSanitizer, private element:ElementRef) {
     this.counter=0;
+    this.counter1=0;
     this.employeeInfo={
       email:''
     };
@@ -81,6 +84,10 @@ export class ReceptionistComponent implements OnInit {
 
     this.clock = setInterval(()=>{
      this.counter = this.counter+1;
+    },1000);
+
+    this.clock1=setInterval(()=>{
+      this.counter1=this.counter1+1;
     },1000);
    }
 
@@ -134,6 +141,14 @@ export class ReceptionistComponent implements OnInit {
 faceTrack()
 {
   var ghadi=0;
+  var ghadi1=0;
+  var clock1 = setInterval(()=>{
+    ghadi1=this.counter1;
+    if(ghadi1==5)
+    {
+      this.counter1=0;
+    }
+  },1000);
   var clock = setInterval(()=>{
     ghadi=this.counter;
     if(ghadi==10)
@@ -146,11 +161,13 @@ faceTrack()
   tracker.setStepSize(2);
   tracker.setEdgesDensity(0.1);
   var isVisitorWelcomed=0;
+  var sendPhoto=0;
   
 
   var imgser = this.train;
   var task = tracking.track(this.video.nativeElement, tracker,{camera:true});
   var speechRecogVariable = this.speech;
+  var empname=this.employeeService;
   var empspeech = new SpeechSynthesisUtterance("Welcome to Macrosoft. How may I help you? Do you want to know about Parsippany weather? if yes say weather parsippany.")
   empspeech.voice=this.voices.filter(function(voice) { return voice.name == "Google UK English Female"; })[0];
   var speechSynVariable = new SpeechSynthesisUtterance("Welcome to Macrosoft. How May I help you? If you want me to call an employee, say employee followed by their first name or last name");
@@ -161,6 +178,10 @@ faceTrack()
       isVisitorWelcomed=0;
       ghadi=0;
     }
+    if(ghadi1==5){
+      ghadi1=0;
+      sendPhoto=0;
+    }
               var video = <HTMLCanvasElement>document.getElementById('video');
               var canvas =  <HTMLCanvasElement> document.getElementById('canvas');
               var context = canvas.getContext('2d');
@@ -168,7 +189,8 @@ faceTrack()
               var snapshotContext = snapshot.getContext('2d');
               var trackimg = this.trackInfo;
               snapshotContext.drawImage(video, 0, 0, video.width, video.height);  
-              var dataURI = snapshot.toDataURL('image/jpeg');    
+              var dataURI = snapshot.toDataURL('image/jpeg');  
+              var dataFromjson;  
               context.clearRect(0, 0, canvas.width, canvas.height); 
               
               console.log(isVisitorWelcomed);
@@ -179,19 +201,25 @@ faceTrack()
                  context.fillStyle = "#fff";
                  if(isVisitorWelcomed==0)
                  {
+                   if(sendPhoto==0){
                   // setInterval(()=>{
                     imgser.prediction(dataURI).subscribe((data)=>{
                       console.log(data.json());
                       var imgback = data.json();
+                      dataFromjson=data.json();
                       if(imgback.employeeId==-1){
                         (<any>window).speechSynthesis.speak(speechSynVariable);
                   
-                  speechSynVariable.onend = function()
-                  {
-                    speechRecogVariable.startListening();
+                      speechSynVariable.onend = function()
+                      {
+                        speechRecogVariable.startListening();
 
-                  }
+                      }
                       }else{
+                        empname.getById(dataFromjson.employeeId).subscribe((data)=>{
+                          
+                          console.log(data);
+                        });
                         // as of now keep this
                         (<any>window).speechSynthesis.speak(empspeech);
                   
@@ -207,13 +235,14 @@ faceTrack()
                   // },60000);
                   // (<any>window).speechSynthesis.speak(speechSynVariable);
                   isVisitorWelcomed= isVisitorWelcomed+1;
+                  sendPhoto=sendPhoto+1;
                   // speechSynVariable.onend = function()
                   // {
                   //   speechRecogVariable.startListening();
 
                   // }
                   
-                 }
+                 }}
               }); 
               
      });
