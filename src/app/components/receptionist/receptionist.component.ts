@@ -94,7 +94,7 @@ export class ReceptionistComponent implements OnInit {
 
    say(utterence: string)
    {
-    //method to be used for speech synthesis
+    this.speech.abort();
     var abc = this.speech;
     var voiceGreeting = new SpeechSynthesisUtterance(utterence);
     voiceGreeting.voice=this.voices.filter(function(voice) { return voice.name == "Google UK English Female"; })[0];
@@ -137,33 +137,20 @@ export class ReceptionistComponent implements OnInit {
 }
 
 faceTrack()
-{
-  var ghadi=0;
-  var ghadi1=0;
-  var clock1 = setInterval(()=>{
-    ghadi1=this.counter1;
-    if(ghadi1==5)
-    {
-      this.counter1=0;
-    }
-  },1000);
-  var clock = setInterval(()=>{
-    ghadi=this.counter;
-    if(ghadi==10)
-    {
-      this.counter=0;
-    }
-  },1000);
+{ var sendImageForFaceRecognition=false;
+  setInterval(()=>{
+    sendImageForFaceRecognition=true;
+  },20000);
+ 
   var tracker = new tracking.ObjectTracker('face');
   tracker.setInitialScale(4);
   tracker.setStepSize(2);
   tracker.setEdgesDensity(0.1);
-  var isVisitorWelcomed=0;
-  var sendPhoto=1;
   var femvoice=this.voices;
 
   var imgser = this.train;
   var task = tracking.track(this.video.nativeElement, tracker,{camera:true});
+  this.speech.startListening();
   var speechRecogVariable = this.speech;
   var empname=this.employeeService;
   var fname;
@@ -171,15 +158,8 @@ faceTrack()
   // var empspeech = new SpeechSynthesisUtterance("Welcome to Macrosoft. How may I help you? Do you want to know about Parsippany weather? if yes say weather parsippany.")
   // empspeech.voice=this.voices.filter(function(voice) { return voice.name == "Google UK English Female"; })[0];
   tracker.on('track', function(event) {
-    if(event.data.length===0 && ghadi==10)
-    {
-      isVisitorWelcomed=0;
-      ghadi=0;
-    }
-    if(ghadi1==5){
-      ghadi1=0;
-      sendPhoto=0;
-    }
+ 
+              console.log(sendImageForFaceRecognition);
               var video = <HTMLCanvasElement>document.getElementById('video');
               var canvas =  <HTMLCanvasElement> document.getElementById('canvas');
               var context = canvas.getContext('2d');
@@ -187,26 +167,26 @@ faceTrack()
               var snapshotContext = snapshot.getContext('2d');
               var trackimg = this.trackInfo;
               snapshotContext.drawImage(video, 0, 0, video.width, video.height);  
-              var dataURI = snapshot.toDataURL('image/jpeg');  
               var dataFromjson;  
               context.clearRect(0, 0, canvas.width, canvas.height); 
               
-              console.log(isVisitorWelcomed);
-               event.data.forEach(function(rect) {
-                 context.strokeStyle = '#a64ceb';
+              event.data.forEach(function(rect) {
+                context.strokeStyle = '#a64ceb';
                  context.strokeRect(rect.x, rect.y, rect.width, rect.height);
                  context.font = '11px Helvetica';
                  context.fillStyle = "#fff";
-                 if(isVisitorWelcomed==0)
-                 {
-                   if(sendPhoto==0){
-                  // setInterval(()=>{
+              });
+
+          
+              
+                    if(sendImageForFaceRecognition == true && event.data.length!==0)
+                    {    
+                    var dataURI = snapshot.toDataURL('image/jpeg'); 
+                    console.log(dataURI); 
                     imgser.prediction(dataURI).subscribe((data)=>{
                       console.log(data.json());
-                      var imgback = data.json();
                       dataFromjson=data.json();
-                      if(imgback.employeeId==-1){
-                        task.stop();
+                      if(dataFromjson.employeeId==-1){
                         var speechSynVariable = new SpeechSynthesisUtterance("Welcome to Macrosoft. How May I help you? If you want me to call an employee, say employee followed by their first name or last name");
                         speechSynVariable.voice=femvoice.filter(function(voice) { return voice.name == "Google UK English Female"; })[0];
                         (<any>window).speechSynthesis.speak(speechSynVariable);
@@ -217,10 +197,13 @@ faceTrack()
 
                       }
                       
-                      }else{
+                      }
+              else
+                {
                         empname.getById(dataFromjson.employeeId).subscribe((data)=>{
                           
                           console.log(data);
+                          speechRecogVariable.startListening();
                           fname = data.firstName;
                           lname = data.lastName;
                           var empspeech = new SpeechSynthesisUtterance("Welcome "+fname+" "+lname+" How may I help you? Do you want to know about Parsippany weather? if yes say weather parsippany.");
@@ -228,32 +211,28 @@ faceTrack()
                           (<any>window).speechSynthesis.speak(empspeech);
                          
                     
-                    empspeech.onend = function()
-                    {
-                     speechRecogVariable.startListening();
+                          // setTimeout(()=>{
+                          //   console.log("PLEASE LISTEN");
+                          //   speechRecogVariable.startListening();
+
+                          // },15000)
   
-                    }
+                          
+                          task.stop();
                         });
                         // as of now keep this
 
-                      }
+                }
+
+                   
+                      
                     });
+                    sendImageForFaceRecognition=false;
 
-                  //   console.log("bhamchika");
-                  // },60000);
-                  // (<any>window).speechSynthesis.speak(speechSynVariable);
-                  isVisitorWelcomed= isVisitorWelcomed+1;
-                  sendPhoto=sendPhoto+1;
-                  // speechSynVariable.onend = function()
-                  // {
-                  //   speechRecogVariable.startListening();
-
-                  // }
-                  
-                 }}
-              }); 
+                }
+               }); 
               
-     });
+    
 }
 
 
