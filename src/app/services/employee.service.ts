@@ -68,6 +68,10 @@ export class EmployeeService{
         return this.http.get('http://localhost:8080/user/employee/'+employeeId).map(this.extractData);
     }
 
+    getById(employeeId){
+        return this.http.get('http://localhost:8080/employee/'+employeeId).map(this.extractData);
+    }
+
     getEmployeeEmail(employeeId){
         return this.http.get('http://localhost:8080/user/employee/'+employeeId).map(this.extractData);
     }
