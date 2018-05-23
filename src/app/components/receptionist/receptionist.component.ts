@@ -99,8 +99,7 @@ export class ReceptionistComponent implements OnInit {
     var voiceGreeting = new SpeechSynthesisUtterance(utterence);
     voiceGreeting.voice=this.voices.filter(function(voice) { return voice.name == "Google UK English Female"; })[0];
     (<any>window).speechSynthesis.speak(voiceGreeting);
-    voiceGreeting.onend = function()
-    {
+    voiceGreeting.onend =function(){
       abc.startListening();
     }
    }
@@ -115,7 +114,6 @@ export class ReceptionistComponent implements OnInit {
      clearInterval(this.timer);
     //  this.speech.abort();//THE say command below shall be moved to face detection function.
     // //  this.say("Welcome to Macrosoft. How May I help you? If you want me to call an employee, say employee followed by their first name or last name")
-    //  this.speech.startListening();
    }
    
  }
@@ -161,17 +159,17 @@ faceTrack()
   tracker.setStepSize(2);
   tracker.setEdgesDensity(0.1);
   var isVisitorWelcomed=0;
-  var sendPhoto=0;
-  
+  var sendPhoto=1;
+  var femvoice=this.voices;
 
   var imgser = this.train;
   var task = tracking.track(this.video.nativeElement, tracker,{camera:true});
   var speechRecogVariable = this.speech;
   var empname=this.employeeService;
-  var empspeech = new SpeechSynthesisUtterance("Welcome to Macrosoft. How may I help you? Do you want to know about Parsippany weather? if yes say weather parsippany.")
-  empspeech.voice=this.voices.filter(function(voice) { return voice.name == "Google UK English Female"; })[0];
-  var speechSynVariable = new SpeechSynthesisUtterance("Welcome to Macrosoft. How May I help you? If you want me to call an employee, say employee followed by their first name or last name");
-  speechSynVariable.voice=this.voices.filter(function(voice) { return voice.name == "Google UK English Female"; })[0];
+  var fname;
+  var lname;
+  // var empspeech = new SpeechSynthesisUtterance("Welcome to Macrosoft. How may I help you? Do you want to know about Parsippany weather? if yes say weather parsippany.")
+  // empspeech.voice=this.voices.filter(function(voice) { return voice.name == "Google UK English Female"; })[0];
   tracker.on('track', function(event) {
     if(event.data.length===0 && ghadi==10)
     {
@@ -208,6 +206,9 @@ faceTrack()
                       var imgback = data.json();
                       dataFromjson=data.json();
                       if(imgback.employeeId==-1){
+                        task.stop();
+                        var speechSynVariable = new SpeechSynthesisUtterance("Welcome to Macrosoft. How May I help you? If you want me to call an employee, say employee followed by their first name or last name");
+                        speechSynVariable.voice=femvoice.filter(function(voice) { return voice.name == "Google UK English Female"; })[0];
                         (<any>window).speechSynthesis.speak(speechSynVariable);
                   
                       speechSynVariable.onend = function()
@@ -215,19 +216,26 @@ faceTrack()
                         speechRecogVariable.startListening();
 
                       }
+                      
                       }else{
                         empname.getById(dataFromjson.employeeId).subscribe((data)=>{
                           
                           console.log(data);
+                          fname = data.firstName;
+                          lname = data.lastName;
+                          var empspeech = new SpeechSynthesisUtterance("Welcome "+fname+" "+lname+" How may I help you? Do you want to know about Parsippany weather? if yes say weather parsippany.");
+                          empspeech.voice=femvoice.filter(function(voice) { return voice.name == "Google UK English Female"; })[0];
+                          (<any>window).speechSynthesis.speak(empspeech);
+                         
+                    
+                    empspeech.onend = function()
+                    {
+                     speechRecogVariable.startListening();
+  
+                    }
                         });
                         // as of now keep this
-                        (<any>window).speechSynthesis.speak(empspeech);
-                  
-                  empspeech.onend = function()
-                  {
-                    speechRecogVariable.startListening();
 
-                  }
                       }
                     });
 
@@ -272,7 +280,7 @@ faceTrack()
           this.say("Here are the employees i found having similar names. To inform an employee, say inform followed by their employee i d. If the employee you are looking for is not shown, please say employee followed by their first name or last name.");
           // this.say("If you did not find the employee that you are looking for in the table, say employee followed by their first name or last name.");
           // this.say("if you found the employee that you are looking for in the table, say inform followed by their employee id displayed in the table.")
-          this.speech.startListening();
+          // this.speech.startListening();
           
         }
       );
@@ -290,7 +298,7 @@ faceTrack()
         // this.speech.abort();
         this.say("I have informed to the employee and he will be there with you shortly. Thank you for coming to macrosoft and have a nice day.");
         //this.say("Thank you for coming to macrosoft and have a nice day.");
-        this.speech.startListening();
+        // this.speech.startListening();
       }
     );
   }
@@ -327,7 +335,7 @@ faceTrack()
         });
       }
     );
-    this.speech.startListening();
+    // this.speech.startListening();
   }
 
   private _listenErrors() {
