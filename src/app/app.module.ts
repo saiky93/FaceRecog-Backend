@@ -1,6 +1,7 @@
 //importing angular libraries
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
+import { HttpClientModule } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';  //used for angular forms and ngmodel
 import { HttpModule } from '@angular/http';   //used for http services get post etc.
 import { RouterModule, Routes } from '@angular/router'; //used for routes
@@ -34,6 +35,7 @@ import { AddEmployeeService } from './services/addemployee.service';
 import { CompanyProfileService } from './services/company.profile.service';
 import { IsEmailExistsService } from './services/isemailexists.service';
 import { DataService } from './services/data.service';
+import { FaceRecognitionService } from './services/face-recognition.service';
 import { AuthenticationService } from './services/authentication.service';
 import { TrainingService} from './services/training.service';
 import { AuthGuardCompany } from './guards/auth.guard.company';
@@ -93,10 +95,11 @@ const appRoutes: Routes = [
     FormsModule,
     SpeechModule,
     HttpModule,
+    HttpClientModule,
     RouterModule.forRoot(appRoutes)
 
   ],
-  providers: [TrainingService,{ provide: 'SPEECH_LANG', useValue: 'en-US' },CompanyService,WeatherService,SpeechService,EmployeeService,IsEmailExistsService,DataService,AuthGuardCompany,AuthGuardEmployee,AuthenticationService,CompanyProfileService,AddEmployeeService],
+  providers: [TrainingService,{ provide: 'SPEECH_LANG', useValue: 'en-US' },CompanyService,FaceRecognitionService,WeatherService,SpeechService,EmployeeService,IsEmailExistsService,DataService,AuthGuardCompany,AuthGuardEmployee,AuthenticationService,CompanyProfileService,AddEmployeeService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

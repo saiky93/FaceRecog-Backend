@@ -2,6 +2,7 @@ import { Component, OnInit, ElementRef, ViewChild } from '@angular/core';
 import { SpeechService } from '../../services/speech.service';
 import { WeatherService } from '../../services/weather.service';
 import { TrainingService } from '../../services/training.service';
+import { FaceRecognitionService } from '../../services/face-recognition.service';
 import {DomSanitizer} from '@angular/platform-browser';
 import { Subscription } from 'rxjs/Subscription';
 import { EmployeeService} from '../../services/employee.service';
@@ -37,6 +38,7 @@ export class ReceptionistComponent implements OnInit {
   employeeId:number;
   employeeInfo: any;
   captures: any[];
+  subscriptionKey:string;
   trackIn:any;
   employeeData : any [];
   @ViewChild("video")
@@ -45,6 +47,7 @@ export class ReceptionistComponent implements OnInit {
   public canvas: ElementRef;
   employeeEmail : any [];
   showEmployee: boolean;
+
   voices:any[];
   timer;
   public videosrc : any;
@@ -58,13 +61,16 @@ export class ReceptionistComponent implements OnInit {
   clock;
   counter1;
   clock1;
-  constructor(public speech: SpeechService,public weather: WeatherService,public train: TrainingService, public employeeService: EmployeeService, private sanitizer:DomSanitizer, private element:ElementRef) {
+  constructor(public speech: SpeechService,public weather: WeatherService,public facerecog: FaceRecognitionService,public train: TrainingService, public employeeService: EmployeeService, private sanitizer:DomSanitizer, private element:ElementRef) {
     this.counter=0;
+    this.subscriptionKey="f803eda1b99f4b638572e5d875829940";
     this.counter1=0;
     this.employeeInfo={
       email:''
     };
-   
+    this.timer = setInterval(()=>{
+      this.getSpeechVoices();
+    },200);
 
     console.log(this.tracker);
     
@@ -78,19 +84,7 @@ export class ReceptionistComponent implements OnInit {
     const {speechSynthesis}: IWindow = <IWindow>window;
 
     //this timer will run until we have list voices from speech api in the this.voices array
-    this.timer = setInterval(()=>{
-      this.getSpeechVoices();
-    },200);
-
-    this.clock = setInterval(()=>{
-     this.counter = this.counter+1;
-    },1000);
-
-    this.clock1=setInterval(()=>{
-      this.counter1=this.counter1+1;
-    },1000);
-   }
-
+  }
 
    say(utterence: string)
    {
@@ -140,48 +134,25 @@ export class ReceptionistComponent implements OnInit {
 
 faceTrack()
 {
-  var ghadi=0;
-  var ghadi1=0;
-  var clock1 = setInterval(()=>{
-    ghadi1=this.counter1;
-    if(ghadi1==5)
-    {
-      this.counter1=0;
-    }
-  },1000);
-  var clock = setInterval(()=>{
-    ghadi=this.counter;
-    if(ghadi==10)
-    {
-      this.counter=0;
-    }
-  },1000);
+  var sendFaceForFaceRecog:boolean = false;
+ 
+  setInterval(()=>{
+  sendFaceForFaceRecog=true;
+ },8000);
+
   var tracker = new tracking.ObjectTracker('face');
   tracker.setInitialScale(4);
   tracker.setStepSize(2);
-  tracker.setEdgesDensity(0.1);
-  var isVisitorWelcomed=0;
-  var sendPhoto=0;
-  
-
-  var imgser = this.train;
+  tracker.setEdgesDensity(0.1); 
   var task = tracking.track(this.video.nativeElement, tracker,{camera:true});
   var speechRecogVariable = this.speech;
   var empname=this.employeeService;
   var empspeech = new SpeechSynthesisUtterance("Welcome to Macrosoft. How may I help you? Do you want to know about Parsippany weather? if yes say weather parsippany.")
   empspeech.voice=this.voices.filter(function(voice) { return voice.name == "Google UK English Female"; })[0];
-  var speechSynVariable = new SpeechSynthesisUtterance("Welcome to Macrosoft. How May I help you? If you want me to call an employee, say employee followed by their first name or last name");
-  speechSynVariable.voice=this.voices.filter(function(voice) { return voice.name == "Google UK English Female"; })[0];
+ var faceRecogSer = this.facerecog;
+ var subKey = this.subscriptionKey;
+ var faceId;
   tracker.on('track', function(event) {
-    if(event.data.length===0 && ghadi==10)
-    {
-      isVisitorWelcomed=0;
-      ghadi=0;
-    }
-    if(ghadi1==5){
-      ghadi1=0;
-      sendPhoto=0;
-    }
               var video = <HTMLCanvasElement>document.getElementById('video');
               var canvas =  <HTMLCanvasElement> document.getElementById('canvas');
               var context = canvas.getContext('2d');
@@ -189,62 +160,51 @@ faceTrack()
               var snapshotContext = snapshot.getContext('2d');
               var trackimg = this.trackInfo;
               snapshotContext.drawImage(video, 0, 0, video.width, video.height);  
-              var dataURI = snapshot.toDataURL('image/jpeg');  
-              var dataFromjson;  
               context.clearRect(0, 0, canvas.width, canvas.height); 
               
-              console.log(isVisitorWelcomed);
                event.data.forEach(function(rect) {
                  context.strokeStyle = '#a64ceb';
                  context.strokeRect(rect.x, rect.y, rect.width, rect.height);
                  context.font = '11px Helvetica';
                  context.fillStyle = "#fff";
-                 if(isVisitorWelcomed==0)
-                 {
-                   if(sendPhoto==0){
-                  // setInterval(()=>{
-                    imgser.prediction(dataURI).subscribe((data)=>{
-                      console.log(data.json());
-                      var imgback = data.json();
-                      dataFromjson=data.json();
-                      if(imgback.employeeId==-1){
-                        (<any>window).speechSynthesis.speak(speechSynVariable);
-                  
-                      speechSynVariable.onend = function()
-                      {
-                        speechRecogVariable.startListening();
-
-                      }
-                      }else{
-                        empname.getById(dataFromjson.employeeId).subscribe((data)=>{
-                          
-                          console.log(data);
-                        });
-                        // as of now keep this
-                        (<any>window).speechSynthesis.speak(empspeech);
-                  
-                  empspeech.onend = function()
-                  {
-                    speechRecogVariable.startListening();
-
-                  }
-                      }
-                    });
-
-                  //   console.log("bhamchika");
-                  // },60000);
-                  // (<any>window).speechSynthesis.speak(speechSynVariable);
-                  isVisitorWelcomed= isVisitorWelcomed+1;
-                  sendPhoto=sendPhoto+1;
-                  // speechSynVariable.onend = function()
-                  // {
-                  //   speechRecogVariable.startListening();
-
-                  // }
-                  
-                 }}
               }); 
+
+              if(event.data.length!==0 && sendFaceForFaceRecog==true)
+              {
+                var dataURI = snapshot.toDataURL('image/jpeg');  
+                faceRecogSer.scanImage(subKey,dataURI).subscribe((data:any)=>{
+                  faceId = data[0].faceId;
+                 
+                   
+                faceRecogSer.identifyPerson(subKey,faceId).subscribe((data:any)=>{
+                  var personId;
+                  console.log(data);
+                  if(data[0].candidates.length>0)
+                  {
+                  personId = data[0].candidates[0].personId;
+                  }
+                  else
+                  {
+                    personId = null;
+                  }
+                  if(personId!=null)
+                  {
+                  faceRecogSer.getNameFromPersonId(subKey,personId).subscribe((data:any)=>{
+                    var personName = data.name;
+                    console.log(data.name);
+                  });
+                  }
+                  else
+                  {
+                    console.log("unidentified");
+                    var speechSynVariable = new SpeechSynthesisUtterance("Welcome to Macrosoft. How May I help you? If you want me to call an employee, say employee followed by their first name or last name");
+                    speechSynVariable.voice=this.voices.filter(function(voice) { return voice.name == "Google UK English Female"; })[0];
+                  }
+                });
+                });
               
+              }
+             sendFaceForFaceRecog = false; 
      });
 }
 
