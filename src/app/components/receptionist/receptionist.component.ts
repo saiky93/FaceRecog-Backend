@@ -149,6 +149,8 @@ faceTrack()
   var empname=this.employeeService;
   var empspeech = new SpeechSynthesisUtterance("Welcome to Macrosoft. How may I help you? Do you want to know about Parsippany weather? if yes say weather parsippany.")
   empspeech.voice=this.voices.filter(function(voice) { return voice.name == "Google UK English Female"; })[0];
+  var speechSynVariable = new SpeechSynthesisUtterance("Welcome to Macrosoft. How May I help you? If you want me to call an employee, say employee followed by their first name or last name");
+  speechSynVariable.voice=this.voices.filter(function(voice) { return voice.name == "Google UK English Female"; })[0];
  var faceRecogSer = this.facerecog;
  var subKey = this.subscriptionKey;
  var faceId;
@@ -197,8 +199,6 @@ faceTrack()
                   else
                   {
                     console.log("unidentified");
-                    var speechSynVariable = new SpeechSynthesisUtterance("Welcome to Macrosoft. How May I help you? If you want me to call an employee, say employee followed by their first name or last name");
-                    speechSynVariable.voice=this.voices.filter(function(voice) { return voice.name == "Google UK English Female"; })[0];
                   }
                 });
                 });
