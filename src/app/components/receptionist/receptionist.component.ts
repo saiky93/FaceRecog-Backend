@@ -8,6 +8,7 @@ import { Subscription } from 'rxjs/Subscription';
 import { EmployeeService} from '../../services/employee.service';
 import {WebCamComponent } from 'ng2-webcam';
 import 'rxjs/add/operator/filter';
+import { CookieService } from 'angular2-cookie/core';
 import 'rxjs/add/operator/map';
 import {Company} from '../../model/Company';
 import { IWindow } from './custom.window';
@@ -61,7 +62,7 @@ export class ReceptionistComponent implements OnInit {
   clock;
   counter1;
   clock1;
-  constructor(public speech: SpeechService,public weather: WeatherService,public facerecog: FaceRecognitionService,public train: TrainingService, public employeeService: EmployeeService, private sanitizer:DomSanitizer, private element:ElementRef) {
+  constructor(public speech: SpeechService,public cookie:CookieService,public weather: WeatherService,public facerecog: FaceRecognitionService,public train: TrainingService, public employeeService: EmployeeService, private sanitizer:DomSanitizer, private element:ElementRef) {
     this.counter=0;
     this.subscriptionKey="f803eda1b99f4b638572e5d875829940";
     this.counter1=0;
@@ -89,14 +90,9 @@ export class ReceptionistComponent implements OnInit {
    say(utterence: string)
    {
     //method to be used for speech synthesis
-    var abc = this.speech;
     var voiceGreeting = new SpeechSynthesisUtterance(utterence);
     voiceGreeting.voice=this.voices.filter(function(voice) { return voice.name == "Google UK English Female"; })[0];
     (<any>window).speechSynthesis.speak(voiceGreeting);
-    voiceGreeting.onend = function()
-    {
-      abc.startListening();
-    }
    }
 
  getSpeechVoices()
@@ -146,14 +142,16 @@ faceTrack()
   tracker.setEdgesDensity(0.1); 
   var task = tracking.track(this.video.nativeElement, tracker,{camera:true});
   var speechRecogVariable = this.speech;
+  var noPersonSpeech = this.speech;
   var empname=this.employeeService;
-  var empspeech = new SpeechSynthesisUtterance("Welcome to Macrosoft. How may I help you? Do you want to know about Parsippany weather? if yes say weather parsippany.")
-  empspeech.voice=this.voices.filter(function(voice) { return voice.name == "Google UK English Female"; })[0];
-  var speechSynVariable = new SpeechSynthesisUtterance("Welcome to Macrosoft. How May I help you? If you want me to call an employee, say employee followed by their first name or last name");
-  speechSynVariable.voice=this.voices.filter(function(voice) { return voice.name == "Google UK English Female"; })[0];
+  var voice = this.voices;
+  var sessionStarted =0;
  var faceRecogSer = this.facerecog;
  var subKey = this.subscriptionKey;
  var faceId;
+ var personId;
+ var cookieSer = this.cookie;
+ cookieSer.removeAll();
   tracker.on('track', function(event) {
               var video = <HTMLCanvasElement>document.getElementById('video');
               var canvas =  <HTMLCanvasElement> document.getElementById('canvas');
@@ -173,13 +171,13 @@ faceTrack()
 
               if(event.data.length!==0 && sendFaceForFaceRecog==true)
               {
+                speechRecogVariable.abort();
                 var dataURI = snapshot.toDataURL('image/jpeg');  
                 faceRecogSer.scanImage(subKey,dataURI).subscribe((data:any)=>{
                   faceId = data[0].faceId;
                  
                    
                 faceRecogSer.identifyPerson(subKey,faceId).subscribe((data:any)=>{
-                  var personId;
                   console.log(data);
                   if(data[0].candidates.length>0)
                   {
@@ -188,21 +186,66 @@ faceTrack()
                   else
                   {
                     personId = null;
+                    cookieSer.remove("recPersonId");
                   }
                   if(personId!=null)
                   {
-                  faceRecogSer.getNameFromPersonId(subKey,personId).subscribe((data:any)=>{
-                    var personName = data.name;
-                    console.log(data.name);
-                  });
+                    if(!cookieSer.get("recPersonId"))
+                    {
+                      cookieSer.put("recPersonId",personId);
+                      faceRecogSer.getNameFromPersonId(subKey,personId).subscribe((data:any)=>{
+                      var personName = data.name;
+                      console.log(data.name);
+                      var empspeech = new SpeechSynthesisUtterance("Welcome "+personName+".How may I help you? Do you want to know about Parsippany weather? if yes say weather parsippany.")
+                      empspeech.voice=voice.filter(function(voice) { return voice.name == "Google UK English Female"; })[0];
+                      (<any>window).speechSynthesis.speak(empspeech);
+                      setTimeout(()=>{
+                        console.log("started listening now");
+                        speechRecogVariable.startListening();
+                      },8500);  
+                    });
+
+                      console.log("put first one");
+                    }
+
+                    if(cookieSer.get("recPersonId")!==personId.toString())
+                    {
+                      faceRecogSer.getNameFromPersonId(subKey,personId).subscribe((data:any)=>{
+                        var personName = data.name;
+                        console.log(data.name);
+                        var empspeech = new SpeechSynthesisUtterance("Welcome "+personName+".How may I help you? Do you want to know about Parsippany weather? if yes say weather parsippany.")
+                      empspeech.voice=voice.filter(function(voice) { return voice.name == "Google UK English Female"; })[0];
+                      (<any>window).speechSynthesis.speak(empspeech);
+                      setTimeout(()=>{
+                        console.log("started listening now");
+                        speechRecogVariable.startListening();
+                      },8500);
+                        });
+                        cookieSer.put("recPersonId",personId);
+                    }
                   }
                   else
                   {
-                    console.log("unidentified");
+                    if(sessionStarted==0)
+                    {
+                      speechRecogVariable.abort();
+                      sessionStarted=sessionStarted+1;
+                    var empspeech = new SpeechSynthesisUtterance("Welcome to Macrosoft, How may I help you, If you want me to call an employee say employee followed by their first name or last name")
+                      empspeech.voice=voice.filter(function(voice) { return voice.name == "Google UK English Female"; })[0];
+                      (<any>window).speechSynthesis.speak(empspeech);
+                      setTimeout(()=>{
+                        console.log("started listening now");
+                        speechRecogVariable.startListening();
+                      },8500);
+                    }
                   }
                 });
                 });
-              
+              }
+              else if(event.data.length==0 && sendFaceForFaceRecog==true)
+              {
+                sessionStarted=0;
+                speechRecogVariable.abort();
               }
              sendFaceForFaceRecog = false; 
      });
@@ -232,7 +275,6 @@ faceTrack()
           this.say("Here are the employees i found having similar names. To inform an employee, say inform followed by their employee i d. If the employee you are looking for is not shown, please say employee followed by their first name or last name.");
           // this.say("If you did not find the employee that you are looking for in the table, say employee followed by their first name or last name.");
           // this.say("if you found the employee that you are looking for in the table, say inform followed by their employee id displayed in the table.")
-          this.speech.startListening();
           
         }
       );
@@ -250,7 +292,6 @@ faceTrack()
         // this.speech.abort();
         this.say("I have informed to the employee and he will be there with you shortly. Thank you for coming to macrosoft and have a nice day.");
         //this.say("Thank you for coming to macrosoft and have a nice day.");
-        this.speech.startListening();
       }
     );
   }
@@ -268,6 +309,7 @@ faceTrack()
   }
 
   private _listenParsippany() {
+    this.speech.abort();
     this.parsiSub = this.speech.words$
     .filter(obj => obj.type == 'parsippany')
     .map(emp1Obj => emp1Obj.word)
@@ -287,7 +329,6 @@ faceTrack()
         });
       }
     );
-    this.speech.startListening();
   }
 
   private _listenErrors() {
