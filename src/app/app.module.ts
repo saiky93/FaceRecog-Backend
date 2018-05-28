@@ -35,6 +35,7 @@ import { AddEmployeeService } from './services/addemployee.service';
 import { CompanyProfileService } from './services/company.profile.service';
 import { IsEmailExistsService } from './services/isemailexists.service';
 import { DataService } from './services/data.service';
+import { CookieService } from 'angular2-cookie/services/cookies.service';
 import { FaceRecognitionService } from './services/face-recognition.service';
 import { AuthenticationService } from './services/authentication.service';
 import { TrainingService} from './services/training.service';
@@ -99,7 +100,7 @@ const appRoutes: Routes = [
     RouterModule.forRoot(appRoutes)
 
   ],
-  providers: [TrainingService,{ provide: 'SPEECH_LANG', useValue: 'en-US' },CompanyService,FaceRecognitionService,WeatherService,SpeechService,EmployeeService,IsEmailExistsService,DataService,AuthGuardCompany,AuthGuardEmployee,AuthenticationService,CompanyProfileService,AddEmployeeService],
+  providers: [TrainingService,{ provide: 'SPEECH_LANG', useValue: 'en-US' },CompanyService,CookieService,FaceRecognitionService,WeatherService,SpeechService,EmployeeService,IsEmailExistsService,DataService,AuthGuardCompany,AuthGuardEmployee,AuthenticationService,CompanyProfileService,AddEmployeeService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
