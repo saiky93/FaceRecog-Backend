@@ -91,6 +91,7 @@ export class ReceptionistComponent implements OnInit {
    {
     //method to be used for speech synthesis
     var voiceGreeting = new SpeechSynthesisUtterance(utterence);
+    voiceGreeting.rate=0.9;
     voiceGreeting.voice=this.voices.filter(function(voice) { return voice.name == "Google UK English Female"; })[0];
     (<any>window).speechSynthesis.speak(voiceGreeting);
    }
@@ -158,7 +159,7 @@ faceTrack()
               var trackimg = this.trackInfo;
               snapshotContext.drawImage(video, 0, 0, video.width, video.height);  
               context.clearRect(0, 0, canvas.width, canvas.height); 
-              
+              speechRecogVariable.startListening();
                event.data.forEach(function(rect) {
                  context.strokeStyle = '#a64ceb';
                  context.strokeRect(rect.x, rect.y, rect.width, rect.height);
@@ -168,7 +169,6 @@ faceTrack()
 
               if(event.data.length!==0 && sendFaceForFaceRecog==true)
               {
-                speechRecogVariable.abort();
                 var dataURI = snapshot.toDataURL('image/jpeg');  
                 faceRecogSer.scanImage(subKey,dataURI).subscribe((data:any)=>{
                   faceId = data[0].faceId;
@@ -188,7 +188,8 @@ faceTrack()
                   if(personId!=null)
                   {
                     if(!cookieSer.get("recPersonId"))
-                    {
+                    {speechRecogVariable.abort();
+
                       cookieSer.put("recPersonId",personId);
                       faceRecogSer.getNameFromPersonId(subKey,personId).subscribe((data:any)=>{
                       var personName = data.name;
@@ -203,6 +204,7 @@ faceTrack()
                       });
                       var empspeech = new SpeechSynthesisUtterance("Welcome "+personName+".How may I help you? Do you want to know about Parsippany weather? if yes say weather parsippany.")
                       empspeech.voice=voice.filter(function(voice) { return voice.name == "Google UK English Female"; })[0];
+                      empspeech.rate=0.9;
                       (<any>window).speechSynthesis.speak(empspeech);
                       setTimeout(()=>{
                         console.log("started listening now");
@@ -215,7 +217,7 @@ faceTrack()
 
                     if(cookieSer.get("recPersonId")!==personId.toString())
                     {
-                      // speechRecogVariable.abort();
+                      speechRecogVariable.abort();
                       faceRecogSer.getNameFromPersonId(subKey,personId).subscribe((data:any)=>{
                         var personName = data.name;
                         var personData = data.userData;
@@ -230,6 +232,7 @@ faceTrack()
                       });
                         var empspeech = new SpeechSynthesisUtterance("Welcome "+personName+".How may I help you? Do you want to know about Parsippany weather? if yes say weather parsippany.")
                       empspeech.voice=voice.filter(function(voice) { return voice.name == "Google UK English Female"; })[0];
+                      empspeech.rate=0.9;
                       (<any>window).speechSynthesis.speak(empspeech);
                       setTimeout(()=>{
                         console.log("started listening now");
@@ -243,10 +246,11 @@ faceTrack()
                   {
                     if(sessionStarted==0)
                     {
-                      // speechRecogVariable.abort();
+                      speechRecogVariable.abort();
                       sessionStarted=sessionStarted+1;
-                    var empspeech = new SpeechSynthesisUtterance("Welcome to Macrosoft, How may I help you, If you want me to call an employee say employee followed by their first name or last name")
-                      empspeech.voice=voice.filter(function(voice) { return voice.name == "Google UK English Female"; })[0];
+                    var empspeech = new SpeechSynthesisUtterance("Welcome to Macrosoft, How may I help you, If you want me to call an employee say employee followed by their first name or last name");
+                    empspeech.rate=0.9;
+                    empspeech.voice=voice.filter(function(voice) { return voice.name == "Google UK English Female"; })[0];
                       (<any>window).speechSynthesis.speak(empspeech);
                       setTimeout(()=>{
                         console.log("started listening now");
@@ -286,7 +290,7 @@ faceTrack()
           this.showEmployeeData(emps);
           //if he says 1.This variable will be initialized with id said by user
           var employeeIdFromSpeech;
-          this.say("Here are the employees i found having similar names. To inform an employee, say inform followed by their employee i d. If the employee you are looking for is not shown, please say employee followed by their first name or last name.");
+          this.say("Here are the employees i found having similar names. If the employee you are looking for is not shown, please say employee followed by their first name or last name.To inform an employee, say inform followed by their employee i d.");
         }
       );
   }
