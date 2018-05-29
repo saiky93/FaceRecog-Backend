@@ -65,7 +65,7 @@ export class ReceptionistComponent implements OnInit {
   clock1;
   constructor(public speech: SpeechService,public cookie:CookieService,public weather: WeatherService,public facerecog: FaceRecognitionService,public train: TrainingService, public employeeService: EmployeeService, private sanitizer:DomSanitizer, private element:ElementRef) {
     this.counter=0;
-    this.subscriptionKey="f803eda1b99f4b638572e5d875829940";
+    this.subscriptionKey="4a9c18e0e7024f16a5d7deb0198e358c";
     this.counter1=0;
     this.employeeInfo={
       email:''

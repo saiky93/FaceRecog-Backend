@@ -65,13 +65,13 @@ export class FaceRecognitionService {
     headers= headers.set('Content-Type', 'application/json');
     headers= headers.set('Ocp-Apim-Subscription-Key', subscriptionKey);
     const url = "https://westcentralus.api.cognitive.microsoft.com/face/v1.0/identify";
-    let body ="{'personGroupId': 'macrosoftemployee','faceIds': ['"+faceId+"'],'maxNumOfCandidatesReturned': '1'}"
+    let body ="{'personGroupId': 'macrosoftemployees','faceIds': ['"+faceId+"'],'maxNumOfCandidatesReturned': '1'}"
     return this.httpClient.post(url,body,{headers});
   }
 
   getNameFromPersonId(subscriptionKey: string,personId:string)
   {
-    const url = "https://westcentralus.api.cognitive.microsoft.com/face/v1.0/persongroups/macrosoftemployee/persons/"+personId;
+    const url = "https://westcentralus.api.cognitive.microsoft.com/face/v1.0/persongroups/macrosoftemployees/persons/"+personId;
     let headers = new HttpHeaders();
     headers= headers.set('Content-Type', 'application/json');
     headers= headers.set('Ocp-Apim-Subscription-Key', subscriptionKey);
