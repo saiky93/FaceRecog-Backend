@@ -138,6 +138,7 @@ faceTrack()
   tracker.setEdgesDensity(0.1); 
   var task = tracking.track(this.video.nativeElement, tracker,{camera:true});
   var speechRecogVariable = this.speech;
+  var empdata = this.employeeService;
   var noPersonSpeech = this.speech;
   var empname=this.employeeService;
   var voice = this.voices;
@@ -191,7 +192,15 @@ faceTrack()
                       cookieSer.put("recPersonId",personId);
                       faceRecogSer.getNameFromPersonId(subKey,personId).subscribe((data:any)=>{
                       var personName = data.name;
+                      var personData = data.userData;
                       console.log(data.name);
+                      console.log(personData);
+                      empdata.getById(personData).subscribe((data)=>{
+                        console.log(data);
+                        var empinf = data;
+                        var name = "Welcome "+empinf.firstName +" "+empinf.lastName
+                        document.getElementById("emName").textContent=name; 
+                      });
                       var empspeech = new SpeechSynthesisUtterance("Welcome "+personName+".How may I help you? Do you want to know about Parsippany weather? if yes say weather parsippany.")
                       empspeech.voice=voice.filter(function(voice) { return voice.name == "Google UK English Female"; })[0];
                       (<any>window).speechSynthesis.speak(empspeech);
@@ -209,7 +218,16 @@ faceTrack()
                       // speechRecogVariable.abort();
                       faceRecogSer.getNameFromPersonId(subKey,personId).subscribe((data:any)=>{
                         var personName = data.name;
+                        var personData = data.userData;
+                        
                         console.log(data.name);
+                        console.log(personData);
+                        empdata.getById(personData).subscribe((data)=>{
+                        console.log(data);
+                        var empinf = data;
+                        var name = "Welcome "+empinf.firstName +" "+empinf.lastName
+                        document.getElementById("emName").textContent=name; 
+                      });
                         var empspeech = new SpeechSynthesisUtterance("Welcome "+personName+".How may I help you? Do you want to know about Parsippany weather? if yes say weather parsippany.")
                       empspeech.voice=voice.filter(function(voice) { return voice.name == "Google UK English Female"; })[0];
                       (<any>window).speechSynthesis.speak(empspeech);
@@ -242,6 +260,7 @@ faceTrack()
               else if(event.data.length==0)
               {
                 sessionStarted=0;
+                document.getElementById("emName").textContent="";
                 // speechRecogVariable.abort();
               }
              sendFaceForFaceRecog = false; 
@@ -348,6 +367,7 @@ faceTrack()
       console.log(data);
       this.employeeData=data;
       this.showEmployee = false;
+      document.getElementById("emName").textContent="";
       this.showEmail = true;
     });
 
