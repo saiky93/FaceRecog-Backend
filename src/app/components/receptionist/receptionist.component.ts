@@ -48,6 +48,7 @@ export class ReceptionistComponent implements OnInit {
   public canvas: ElementRef;
   employeeEmail : any [];
   showEmployee: boolean;
+  showEmail:boolean;
 
   voices:any[];
   timer;
@@ -80,11 +81,10 @@ export class ReceptionistComponent implements OnInit {
     this.captures=[];
 
     this.showEmployee=true;
+    this.showEmail=true;
 
     const {SpeechSynthesisUtterance}: IWindow = <IWindow>window;
     const {speechSynthesis}: IWindow = <IWindow>window;
-
-    //this timer will run until we have list voices from speech api in the this.voices array
   }
 
    say(utterence: string)
@@ -103,9 +103,6 @@ export class ReceptionistComponent implements OnInit {
      console.log(this.voices);
      this.say("");//this will pre set say() function to be used later on
      clearInterval(this.timer);
-    //  this.speech.abort();//THE say command below shall be moved to face detection function.
-    // //  this.say("Welcome to Macrosoft. How May I help you? If you want me to call an employee, say employee followed by their first name or last name")
-    //  this.speech.startListening();
    }
    
  }
@@ -118,7 +115,6 @@ export class ReceptionistComponent implements OnInit {
     this._listenEnd();
     this._listenParsippany();
     this._listenErrors();
-    this.speech.abort();
 
   }
   public ngAfterViewInit() {
@@ -210,6 +206,7 @@ faceTrack()
 
                     if(cookieSer.get("recPersonId")!==personId.toString())
                     {
+                      // speechRecogVariable.abort();
                       faceRecogSer.getNameFromPersonId(subKey,personId).subscribe((data:any)=>{
                         var personName = data.name;
                         console.log(data.name);
@@ -228,7 +225,7 @@ faceTrack()
                   {
                     if(sessionStarted==0)
                     {
-                      speechRecogVariable.abort();
+                      // speechRecogVariable.abort();
                       sessionStarted=sessionStarted+1;
                     var empspeech = new SpeechSynthesisUtterance("Welcome to Macrosoft, How may I help you, If you want me to call an employee say employee followed by their first name or last name")
                       empspeech.voice=voice.filter(function(voice) { return voice.name == "Google UK English Female"; })[0];
@@ -242,10 +239,10 @@ faceTrack()
                 });
                 });
               }
-              else if(event.data.length==0 && sendFaceForFaceRecog==true)
+              else if(event.data.length==0)
               {
                 sessionStarted=0;
-                speechRecogVariable.abort();
+                // speechRecogVariable.abort();
               }
              sendFaceForFaceRecog = false; 
      });
@@ -270,12 +267,7 @@ faceTrack()
           this.showEmployeeData(emps);
           //if he says 1.This variable will be initialized with id said by user
           var employeeIdFromSpeech;
-          
-          // this.speech.abort();
           this.say("Here are the employees i found having similar names. To inform an employee, say inform followed by their employee i d. If the employee you are looking for is not shown, please say employee followed by their first name or last name.");
-          // this.say("If you did not find the employee that you are looking for in the table, say employee followed by their first name or last name.");
-          // this.say("if you found the employee that you are looking for in the table, say inform followed by their employee id displayed in the table.")
-          
         }
       );
   }
@@ -289,9 +281,7 @@ faceTrack()
         this._setError();
         console.log('emp1', emp1);
         this.showEmployeeInfo(emp1);
-        // this.speech.abort();
         this.say("I have informed to the employee and he will be there with you shortly. Thank you for coming to macrosoft and have a nice day.");
-        //this.say("Thank you for coming to macrosoft and have a nice day.");
       }
     );
   }
@@ -309,7 +299,6 @@ faceTrack()
   }
 
   private _listenParsippany() {
-    this.speech.abort();
     this.parsiSub = this.speech.words$
     .filter(obj => obj.type == 'parsippany')
     .map(emp1Obj => emp1Obj.word)
@@ -359,7 +348,7 @@ faceTrack()
       console.log(data);
       this.employeeData=data;
       this.showEmployee = false;
-      
+      this.showEmail = true;
     });
 
   }
@@ -369,7 +358,7 @@ faceTrack()
       console.log(data);
       this.employeeInfo = data;
       this.showEmployee = true;
-
+      this.showEmail = false;
     });
   }
 
