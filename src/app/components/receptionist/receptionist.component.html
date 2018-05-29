@@ -11,13 +11,13 @@
 </div>
 
 
-<div class="row" *ngIf="errorMsg">
+<!-- <div class="row" *ngIf="errorMsg">
   <div class="col">
-    <!-- <p class="alert alert-warning">
+    <p class="alert alert-warning">
       {{errorMsg}}
-    </p> -->
+    </p>
   </div>
-</div>
+</div> -->
 
 <div class="container" [hidden] = "showEmployee" style="float:right; margin-top:40px;">
         <h1>The employees with similar names are:</h1><br>
@@ -29,6 +29,10 @@
         </table>
         </div>
 
-        <div style="float:right; margin-top:40px;">
+        <div class="container" style="float:right;padding-top: 100px;">
+          <h3 id="emName"></h3>
+        </div>
+
+        <div style="float:right; margin-top:40px;" [hidden]="showEmail">
           <h2><i>{{employeeInfo.email}}</i></h2>
         </div>

@@ -48,6 +48,7 @@ export class ReceptionistComponent implements OnInit {
   public canvas: ElementRef;
   employeeEmail : any [];
   showEmployee: boolean;
+  showEmail:boolean;
 
   voices:any[];
   timer;
@@ -80,17 +81,17 @@ export class ReceptionistComponent implements OnInit {
     this.captures=[];
 
     this.showEmployee=true;
+    this.showEmail=true;
 
     const {SpeechSynthesisUtterance}: IWindow = <IWindow>window;
     const {speechSynthesis}: IWindow = <IWindow>window;
-
-    //this timer will run until we have list voices from speech api in the this.voices array
   }
 
    say(utterence: string)
    {
     //method to be used for speech synthesis
     var voiceGreeting = new SpeechSynthesisUtterance(utterence);
+    voiceGreeting.rate=0.9;
     voiceGreeting.voice=this.voices.filter(function(voice) { return voice.name == "Google UK English Female"; })[0];
     (<any>window).speechSynthesis.speak(voiceGreeting);
    }
@@ -103,9 +104,6 @@ export class ReceptionistComponent implements OnInit {
      console.log(this.voices);
      this.say("");//this will pre set say() function to be used later on
      clearInterval(this.timer);
-    //  this.speech.abort();//THE say command below shall be moved to face detection function.
-    // //  this.say("Welcome to Macrosoft. How May I help you? If you want me to call an employee, say employee followed by their first name or last name")
-    //  this.speech.startListening();
    }
    
  }
@@ -118,7 +116,6 @@ export class ReceptionistComponent implements OnInit {
     this._listenEnd();
     this._listenParsippany();
     this._listenErrors();
-    this.speech.abort();
 
   }
   public ngAfterViewInit() {
@@ -142,6 +139,7 @@ faceTrack()
   tracker.setEdgesDensity(0.1); 
   var task = tracking.track(this.video.nativeElement, tracker,{camera:true});
   var speechRecogVariable = this.speech;
+  var empdata = this.employeeService;
   var noPersonSpeech = this.speech;
   var empname=this.employeeService;
   var voice = this.voices;
@@ -161,7 +159,7 @@ faceTrack()
               var trackimg = this.trackInfo;
               snapshotContext.drawImage(video, 0, 0, video.width, video.height);  
               context.clearRect(0, 0, canvas.width, canvas.height); 
-              
+              speechRecogVariable.startListening();
                event.data.forEach(function(rect) {
                  context.strokeStyle = '#a64ceb';
                  context.strokeRect(rect.x, rect.y, rect.width, rect.height);
@@ -171,7 +169,6 @@ faceTrack()
 
               if(event.data.length!==0 && sendFaceForFaceRecog==true)
               {
-                speechRecogVariable.abort();
                 var dataURI = snapshot.toDataURL('image/jpeg');  
                 faceRecogSer.scanImage(subKey,dataURI).subscribe((data:any)=>{
                   faceId = data[0].faceId;
@@ -191,13 +188,23 @@ faceTrack()
                   if(personId!=null)
                   {
                     if(!cookieSer.get("recPersonId"))
-                    {
+                    {speechRecogVariable.abort();
+
                       cookieSer.put("recPersonId",personId);
                       faceRecogSer.getNameFromPersonId(subKey,personId).subscribe((data:any)=>{
                       var personName = data.name;
+                      var personData = data.userData;
                       console.log(data.name);
+                      console.log(personData);
+                      empdata.getById(personData).subscribe((data)=>{
+                        console.log(data);
+                        var empinf = data;
+                        var name = "Welcome "+empinf.firstName +" "+empinf.lastName
+                        document.getElementById("emName").textContent=name; 
+                      });
                       var empspeech = new SpeechSynthesisUtterance("Welcome "+personName+".How may I help you? Do you want to know about Parsippany weather? if yes say weather parsippany.")
                       empspeech.voice=voice.filter(function(voice) { return voice.name == "Google UK English Female"; })[0];
+                      empspeech.rate=0.9;
                       (<any>window).speechSynthesis.speak(empspeech);
                       setTimeout(()=>{
                         console.log("started listening now");
@@ -210,11 +217,22 @@ faceTrack()
 
                     if(cookieSer.get("recPersonId")!==personId.toString())
                     {
+                      speechRecogVariable.abort();
                       faceRecogSer.getNameFromPersonId(subKey,personId).subscribe((data:any)=>{
                         var personName = data.name;
+                        var personData = data.userData;
+                        
                         console.log(data.name);
+                        console.log(personData);
+                        empdata.getById(personData).subscribe((data)=>{
+                        console.log(data);
+                        var empinf = data;
+                        var name = "Welcome "+empinf.firstName +" "+empinf.lastName
+                        document.getElementById("emName").textContent=name; 
+                      });
                         var empspeech = new SpeechSynthesisUtterance("Welcome "+personName+".How may I help you? Do you want to know about Parsippany weather? if yes say weather parsippany.")
                       empspeech.voice=voice.filter(function(voice) { return voice.name == "Google UK English Female"; })[0];
+                      empspeech.rate=0.9;
                       (<any>window).speechSynthesis.speak(empspeech);
                       setTimeout(()=>{
                         console.log("started listening now");
@@ -230,8 +248,9 @@ faceTrack()
                     {
                       speechRecogVariable.abort();
                       sessionStarted=sessionStarted+1;
-                    var empspeech = new SpeechSynthesisUtterance("Welcome to Macrosoft, How may I help you, If you want me to call an employee say employee followed by their first name or last name")
-                      empspeech.voice=voice.filter(function(voice) { return voice.name == "Google UK English Female"; })[0];
+                    var empspeech = new SpeechSynthesisUtterance("Welcome to Macrosoft, How may I help you, If you want me to call an employee say employee followed by their first name or last name");
+                    empspeech.rate=0.9;
+                    empspeech.voice=voice.filter(function(voice) { return voice.name == "Google UK English Female"; })[0];
                       (<any>window).speechSynthesis.speak(empspeech);
                       setTimeout(()=>{
                         console.log("started listening now");
@@ -242,10 +261,11 @@ faceTrack()
                 });
                 });
               }
-              else if(event.data.length==0 && sendFaceForFaceRecog==true)
+              else if(event.data.length==0)
               {
                 sessionStarted=0;
-                speechRecogVariable.abort();
+                document.getElementById("emName").textContent="";
+                // speechRecogVariable.abort();
               }
              sendFaceForFaceRecog = false; 
      });
@@ -270,12 +290,7 @@ faceTrack()
           this.showEmployeeData(emps);
           //if he says 1.This variable will be initialized with id said by user
           var employeeIdFromSpeech;
-          
-          // this.speech.abort();
-          this.say("Here are the employees i found having similar names. To inform an employee, say inform followed by their employee i d. If the employee you are looking for is not shown, please say employee followed by their first name or last name.");
-          // this.say("If you did not find the employee that you are looking for in the table, say employee followed by their first name or last name.");
-          // this.say("if you found the employee that you are looking for in the table, say inform followed by their employee id displayed in the table.")
-          
+          this.say("Here are the employees i found having similar names. If the employee you are looking for is not shown, please say employee followed by their first name or last name.To inform an employee, say inform followed by their employee i d.");
         }
       );
   }
@@ -289,9 +304,7 @@ faceTrack()
         this._setError();
         console.log('emp1', emp1);
         this.showEmployeeInfo(emp1);
-        // this.speech.abort();
         this.say("I have informed to the employee and he will be there with you shortly. Thank you for coming to macrosoft and have a nice day.");
-        //this.say("Thank you for coming to macrosoft and have a nice day.");
       }
     );
   }
@@ -309,7 +322,6 @@ faceTrack()
   }
 
   private _listenParsippany() {
-    this.speech.abort();
     this.parsiSub = this.speech.words$
     .filter(obj => obj.type == 'parsippany')
     .map(emp1Obj => emp1Obj.word)
@@ -359,7 +371,8 @@ faceTrack()
       console.log(data);
       this.employeeData=data;
       this.showEmployee = false;
-      
+      document.getElementById("emName").textContent="";
+      this.showEmail = true;
     });
 
   }
@@ -369,7 +382,7 @@ faceTrack()
       console.log(data);
       this.employeeInfo = data;
       this.showEmployee = true;
-
+      this.showEmail = false;
     });
   }
 
