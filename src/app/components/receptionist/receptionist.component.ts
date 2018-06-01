@@ -28,7 +28,6 @@ export class ReceptionistComponent implements OnInit {
   tracker:any;
   emps: string[];
   emps1: string[];
-  end: string[];
   parsippany: string[];
   empsSub: Subscription;
   emp1Sub: Subscription;
@@ -49,24 +48,13 @@ export class ReceptionistComponent implements OnInit {
   employeeEmail : any [];
   showEmployee: boolean;
   showEmail:boolean;
-
   voices:any[];
   timer;
   public videosrc : any;
-  FaceRecognitionBackend = "http://localhost:5000/";
-  abc;
   hide:boolean;
   weatherString:string;
-  detector:any;
-  sendPhotoForFaceRecognition:any;
-  counter;
-  clock;
-  counter1;
-  clock1;
   constructor(public speech: SpeechService,public cookie:CookieService,public weather: WeatherService,public facerecog: FaceRecognitionService,public train: TrainingService, public employeeService: EmployeeService, private sanitizer:DomSanitizer, private element:ElementRef) {
-    this.counter=0;
     this.subscriptionKey="4a9c18e0e7024f16a5d7deb0198e358c";
-    this.counter1=0;
     this.employeeInfo={
       email:''
     };
@@ -131,7 +119,7 @@ faceTrack()
  
   setInterval(()=>{
   sendFaceForFaceRecog=true;
- },8000);
+ },6000);
 
   var tracker = new tracking.ObjectTracker('face');
   tracker.setInitialScale(4);
@@ -261,11 +249,11 @@ faceTrack()
                 });
                 });
               }
-              else if(event.data.length==0)
+              else if(event.data.length==0 && sendFaceForFaceRecog==true)
               {
                 sessionStarted=0;
                 document.getElementById("emName").textContent="";
-                // speechRecogVariable.abort();
+                cookieSer.remove("recPersonId");
               }
              sendFaceForFaceRecog = false; 
      });
