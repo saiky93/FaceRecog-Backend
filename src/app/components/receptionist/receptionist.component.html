@@ -1,9 +1,5 @@
 <app-navbar1></app-navbar1>
 
-<div class="container">
-  <h1 class="text-center"><marquee><i>Front Desk Receptionist</i></marquee></h1>
-</div>
-
 <div class="canvasContainer">
 <canvas #snapshotCanvas id="snapshotCanvas" width="320" height="240"></canvas>
 <video #video id="video" width="320" height="240" autoplay muted></video>
@@ -19,7 +15,7 @@
   </div>
 </div> -->
 
-<div class="container" [hidden] = "showEmployee" style="float:right; margin-top:40px;">
+<div class="container" [hidden] = "showEmployee" style="float:right;">
         <h1>The employees with similar names are:</h1><br>
         <table class="table table-responsive table-striped table-bordered">
           <tr><td><h2>EmployeeId</h2></td> <td><h2>FirstName</h2></td> <td><h2>LastName</h2></td></tr>
@@ -33,6 +29,15 @@
           <h3 id="emName"></h3>
         </div>
 
-        <div style="float:right; margin-top:40px;" [hidden]="showEmail">
-          <h2><i>{{employeeInfo.email}}</i></h2>
+        <div style="float:left; margin-left:600px;" [hidden]="showEmail">
+          <h2 id="empema"><i></i></h2>
         </div>
+<div style="margin-top:250px;"><br><br>
+  <h5><i>The following questions can be handled by the receptionist:</i></h5>
+  <table class="table table-responsive table-striped table-bordered"><br>
+    <tr><td><h6 >Say Employee followed by the Employee FirstName.</h6></td></tr>
+    <tr><td><h6>Say Employee followed by the Employee LastName.</h6></td></tr>
+    <tr><td><h6>Say Inform followed by the Employee Id.</h6></td></tr>
+    <tr><td><h6>Say Weather Parsippany to check Parsippany Weather.</h6></td></tr>
+  </table>
+</div>
