@@ -49,6 +49,7 @@ export class ReceptionistComponent implements OnInit {
   employeeEmail : any [];
   showEmployee: boolean;
   showEmail:boolean;
+  //showQuestions: boolean;
 
   voices:any[];
   timer;
@@ -82,6 +83,7 @@ export class ReceptionistComponent implements OnInit {
 
     this.showEmployee=true;
     this.showEmail=true;
+    //this.showQuestions=false;
 
     const {SpeechSynthesisUtterance}: IWindow = <IWindow>window;
     const {speechSynthesis}: IWindow = <IWindow>window;
@@ -159,7 +161,6 @@ faceTrack()
               var trackimg = this.trackInfo;
               snapshotContext.drawImage(video, 0, 0, video.width, video.height);  
               context.clearRect(0, 0, canvas.width, canvas.height); 
-              speechRecogVariable.startListening();
                event.data.forEach(function(rect) {
                  context.strokeStyle = '#a64ceb';
                  context.strokeRect(rect.x, rect.y, rect.width, rect.height);
@@ -202,7 +203,7 @@ faceTrack()
                         var name = "Welcome "+empinf.firstName +" "+empinf.lastName
                         document.getElementById("emName").textContent=name; 
                       });
-                      var empspeech = new SpeechSynthesisUtterance("Welcome "+personName+".How may I help you? Do you want to know about Parsippany weather? if yes say weather parsippany.")
+                      var empspeech = new SpeechSynthesisUtterance("Welcome "+personName+".How may I help you?")
                       empspeech.voice=voice.filter(function(voice) { return voice.name == "Google UK English Female"; })[0];
                       empspeech.rate=0.9;
                       (<any>window).speechSynthesis.speak(empspeech);
@@ -230,7 +231,7 @@ faceTrack()
                         var name = "Welcome "+empinf.firstName +" "+empinf.lastName
                         document.getElementById("emName").textContent=name; 
                       });
-                        var empspeech = new SpeechSynthesisUtterance("Welcome "+personName+".How may I help you? Do you want to know about Parsippany weather? if yes say weather parsippany.")
+                        var empspeech = new SpeechSynthesisUtterance("Welcome "+personName+".How may I help you?")
                       empspeech.voice=voice.filter(function(voice) { return voice.name == "Google UK English Female"; })[0];
                       empspeech.rate=0.9;
                       (<any>window).speechSynthesis.speak(empspeech);
@@ -248,7 +249,7 @@ faceTrack()
                     {
                       speechRecogVariable.abort();
                       sessionStarted=sessionStarted+1;
-                    var empspeech = new SpeechSynthesisUtterance("Welcome to Macrosoft, How may I help you, If you want me to call an employee say employee followed by their first name or last name");
+                    var empspeech = new SpeechSynthesisUtterance("Welcome to Macrosoft, How may I help you?");
                     empspeech.rate=0.9;
                     empspeech.voice=voice.filter(function(voice) { return voice.name == "Google UK English Female"; })[0];
                       (<any>window).speechSynthesis.speak(empspeech);
@@ -265,6 +266,7 @@ faceTrack()
               {
                 sessionStarted=0;
                 document.getElementById("emName").textContent="";
+                document.getElementById("empema").textContent="";
                 // speechRecogVariable.abort();
               }
              sendFaceForFaceRecog = false; 
@@ -289,8 +291,8 @@ faceTrack()
           console.log('emps', emps);
           this.showEmployeeData(emps);
           //if he says 1.This variable will be initialized with id said by user
-          var employeeIdFromSpeech;
-          this.say("Here are the employees i found having similar names. If the employee you are looking for is not shown, please say employee followed by their first name or last name.To inform an employee, say inform followed by their employee i d.");
+          //this.showQuestions = true;
+          this.say("Here are the List of employees i found having similar names. If the employee you are looking for is not shown, please say employee followed by their first name or last name.To inform an employee, say inform followed by their employee i d.");
         }
       );
   }
@@ -304,6 +306,7 @@ faceTrack()
         this._setError();
         console.log('emp1', emp1);
         this.showEmployeeInfo(emp1);
+        //this.showQuestions = true;
         this.say("I have informed to the employee and he will be there with you shortly. Thank you for coming to macrosoft and have a nice day.");
       }
     );
@@ -335,6 +338,7 @@ faceTrack()
           weatherData = res.json();
           var conditions = weatherData.weather[0].description;
           var temperature = weatherData.main.temp;
+          //this.showQuestions = true;
           this.weatherString = "It is currently "+conditions+" with a temperature of "+temperature+" degree fahrenheit.";
           this.say(this.weatherString);
           console.log(this.weatherString);
@@ -372,7 +376,9 @@ faceTrack()
       this.employeeData=data;
       this.showEmployee = false;
       document.getElementById("emName").textContent="";
+      document.getElementById("empema").textContent="";
       this.showEmail = true;
+      //this.showQuestions = true;
     });
 
   }
@@ -381,8 +387,11 @@ faceTrack()
     this.employeeService.getEmployeeEmail(employeeId).subscribe((data)=>{
       console.log(data);
       this.employeeInfo = data;
+      var email = "Informed to "+data.email;
+      document.getElementById("empema").textContent=email;
       this.showEmployee = true;
       this.showEmail = false;
+      //this.showQuestions = true;
     });
   }
 
